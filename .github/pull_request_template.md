@@ -2,7 +2,7 @@
 By submitting this pull request, you hereby license all content you contribute to this
 repository (including but not limited to this pull request and all bugs, commits,
 pull requests, feature requests, and suggestions) under the repository's
-[LICENSE](https://github.com/holvonix-open/hx-node-template/blob/master/LICENSE).
+[LICENSE](https://github.com/holvonix-open/io-ts-fuzzer/blob/master/LICENSE).
 You also represent and warrant that you have all necessary rights to license the
 content as specified in the preceding sentence and that doing so will not infringe
 upon any right of any third party nor violate any applicable law or regulation.**

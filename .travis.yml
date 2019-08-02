@@ -4,6 +4,7 @@ branches:
 language: node_js
 node_js:
   - "10"
+  - "12"
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.16.0
   - export PATH="$(yarn global bin):$PATH"
@@ -13,4 +14,18 @@ install:
 before_script:
   - export FAKE_HOSTNAME=travis-box
 script: yarn test-coverage
-after_success: yarn semantic-release
+
+stages:
+  - name: test
+  - name: release
+    if: branch = master AND type = push
+jobs:
+  include:
+    - stage: release
+      node_js: lts/*
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - yarn semantic-release

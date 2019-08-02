@@ -1,16 +1,16 @@
 {
-  "name": "hx-node-template",
+  "name": "io-ts-fuzzer",
   "version": "0.1.0",
-  "description": "TODO",
+  "description": "Fuzzing for io-ts codecs and types",
   "repository": {
     "type": "git",
-    "url": "https://github.com/holvonix-open/hx-node-template.git"
+    "url": "https://github.com/holvonix-open/io-ts-fuzzer.git"
   },
   "keywords": [
-    "TODO"
+    "io-ts", "codecs", "fuzzer", "security"
   ],
   "engines": {
-    "node": "^10.0.0",
+    "node": "^10.0.0 || ^ 12.0.0",
     "yarn": "^1.0.0"
   },
   "main": "build/src/index.js",

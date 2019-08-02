@@ -1,8 +1,8 @@
 /*!
-# hx-node-template
+# io-ts-fuzzer
 
 This product contains software originally developed by Holvonix LLC.
-Original Repository: https://github.com/holvonix-open/hx-node-template
+Original Repository: https://github.com/holvonix-open/io-ts-fuzzer
 
 Copyright (c) 2019 Holvonix LLC. All rights reserved.
 
