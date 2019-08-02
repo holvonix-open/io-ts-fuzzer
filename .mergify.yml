@@ -1,0 +1,36 @@
+pull_request_rules:
+  - name: delete head branch after merge
+    conditions:
+      - merged
+    actions:
+      delete_head_branch: {}
+  - name: automatic merge for master when reviewed and CI passes
+    conditions:
+      - status-success=Travis CI - Pull Request
+      - status-success=Travis CI - Branch
+      - status-success=DeepScan
+      - status-success=Codacy/PR Quality Review
+      - "#approved-reviews-by>=1"
+      - "#review-requested=0"
+      - "#changes-requested-reviews-by=0"
+      - "#commented-reviews-by=0"
+      - base=master
+      - label!=wip
+    actions:
+      merge:
+        method: merge
+  - name: automatic merge for master when labeled and CI passes
+    conditions:
+      - status-success=Travis CI - Pull Request
+      - status-success=Travis CI - Branch
+      - status-success=DeepScan
+      - status-success=Codacy/PR Quality Review
+      - "#review-requested=0"
+      - "#changes-requested-reviews-by=0"
+      - "#commented-reviews-by=0"
+      - base=master
+      - label=merge
+      - label!=wip
+    actions:
+      merge:
+        method: merge

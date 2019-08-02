@@ -1,0 +1,16 @@
+branches:
+  only:
+  - master
+language: node_js
+node_js:
+  - "10"
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.16.0
+  - export PATH="$(yarn global bin):$PATH"
+cache: yarn
+install:
+  - yarn --frozen-lockfile
+before_script:
+  - export FAKE_HOSTNAME=travis-box
+script: yarn test-coverage
+after_success: yarn semantic-release

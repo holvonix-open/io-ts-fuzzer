@@ -1,0 +1,114 @@
+{
+  "name": "hx-node-template",
+  "version": "0.1.0",
+  "description": "TODO",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holvonix-open/hx-node-template.git"
+  },
+  "keywords": [
+    "TODO"
+  ],
+  "engines": {
+    "node": "^10.0.0",
+    "yarn": "^1.0.0"
+  },
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
+  "files": [
+    "build/src/**/*.js",
+    "build/src/**/*.d.ts",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "nyc": {
+    "cache": false,
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "prettier.config.js",
+      "**/*.d.ts",
+      "test/**/*.*",
+      "build/**/**/*.js"
+    ],
+    "all": true
+  },
+  "author": "Holvonix LLC",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": false,
+  "scripts": {
+    "t": "yarn fix && yarn test --grep='#slow' --invert",
+    "cleantests": "rm -rf *.lcov .nyc_output coverage",
+    "clean": "gts clean",
+    "start": "node index.js",
+    "debug": "node --inspect index.js",
+    "cleanstart": "yarn clean; yarn start",
+    "test": "nyc ts-mocha -p ./tsconfig.json 'test/**/*.ts'",
+    "test-coverage": "yarn clean && yarn test && yarn report-coverage",
+    "report-coverage": "nyc report --reporter=json && codecov -F unit -f coverage/*.json",
+    "lint": "yarn fix && yarn run check",
+    "check": "gts check",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "yarn clean && yarn run check && yarn run compile",
+    "pretest": "yarn run compile",
+    "posttest": "yarn run check",
+    "preversion": "yarn test",
+    "semantic-release": "semantic-release"
+  },
+  "release": {
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "type": "perf",
+              "release": "patch"
+            },
+            {
+              "type": "refactor",
+              "release": "patch"
+            },
+            {
+              "type": "docs",
+              "release": "patch"
+            },
+            {
+              "type": "chore",
+              "scope": "deps",
+              "release": "patch"
+            },
+            {
+              "subject": "/skip-release/",
+              "release": false
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/git": "^7.0.16",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^12.6.9",
+    "codecov": "^3.4.0",
+    "gts": "^1.1.0",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "semantic-release": "^15.13.19",
+    "ts-mocha": "^6.0.0",
+    "typescript": "~3.5.0"
+  }
+}

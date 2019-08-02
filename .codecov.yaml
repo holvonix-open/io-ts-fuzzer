@@ -1,0 +1,41 @@
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+ignore:
+  - "**/*_test.js"
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default: off
+      unit:
+        flags: unit
+      e2e:
+        flags: e2e
+    patch:
+      default: off
+      unit:
+        flags: unit
+      e2e:
+        flags: e2e
+    changes: no
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+  javascript:
+    enable_partials: yes
+
+comment:
+  layout: "header, reach, diff, flags, files"
+  behavior: default
+  require_changes: no
