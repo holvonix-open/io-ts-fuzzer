@@ -1,6 +1,6 @@
 {
   "name": "io-ts-fuzzer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Fuzzing for io-ts codecs and types",
   "repository": {
     "type": "git",

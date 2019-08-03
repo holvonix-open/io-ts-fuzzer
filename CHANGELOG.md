@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.2.1...v1.2.2) (2019-08-03)
+
+
+### Performance Improvements
+
+* remove unneeded deps ([1ba0e32](https://github.com/holvonix-open/io-ts-fuzzer/commit/1ba0e32))
+
 ## [1.2.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.2.0...v1.2.1) (2019-08-03)
 
 # [1.2.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.1.0...v1.2.0) (2019-08-03)
