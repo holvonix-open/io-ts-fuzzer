@@ -37,6 +37,12 @@ Currently supports:
 * `t.union`
 * `t.type` (interface)
 * `t.partial`
+* `t.intersection`
+* `t.array`
+* `t.null`
+* `t.undefined`
+* `t.void`
+* `t.unknown`
 
 
 ## License

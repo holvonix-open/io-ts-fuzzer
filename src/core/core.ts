@@ -22,6 +22,7 @@ export type BasicType =
   | t.PartialType<any>
   | t.DictionaryType<t.Any, t.Any>
   | t.UnionType<t.Any[]>
+  | t.IntersectionType<t.Any[]>
   // tslint:disable-next-line:no-any
   | t.InterfaceType<any>
   | t.TupleType<t.Any[]>
@@ -85,6 +86,20 @@ export function fuzzString(n: number): string {
   return `${n}`;
 }
 
+export function fuzzNull(): null {
+  return null;
+}
+
+export function fuzzUndefined(): undefined {
+  return undefined;
+}
+
+export function fuzzVoid(): void {}
+
+export function fuzzUnknown(n: number): unknown {
+  return n;
+}
+
 // tslint:disable-next-line:no-any
 export function fuzzUnion(b: t.UnionType<t.Any[]>): ConcreteFuzzer<any> {
   return {
@@ -113,6 +128,22 @@ export function fuzzInterface(
   };
 }
 
+export function fuzzArray(
+  b: t.ArrayType<t.Mixed>
+  // tslint:disable-next-line:no-any
+): ConcreteFuzzer<any[]> {
+  return {
+    children: [b.type],
+    func: (n, h0) => {
+      const ret = [];
+      for (let index = 0; index < n % 103; index++) {
+        ret.push(h0.encode(n + index));
+      }
+      return ret;
+    },
+  };
+}
+
 // tslint:disable-next-line:no-any
 export function fuzzPartial(b: t.PartialType<t.Props>): ConcreteFuzzer<any> {
   const keys = Object.getOwnPropertyNames(b.props);
@@ -131,11 +162,38 @@ export function fuzzPartial(b: t.PartialType<t.Props>): ConcreteFuzzer<any> {
   };
 }
 
+export function fuzzIntersection(
+  b: t.IntersectionType<t.Any[]>
+  // tslint:disable-next-line:no-any
+): ConcreteFuzzer<any> {
+  return {
+    children: b.types,
+    func: (n, ...h) => {
+      // tslint:disable-next-line:no-any
+      let ret: any = undefined;
+      h.forEach((v, i) => {
+        if (ret === undefined) {
+          ret = v.encode(n);
+        } else {
+          ret = { ...ret, ...v.encode(n) };
+        }
+      });
+      return ret;
+    },
+  };
+}
+
 export const coreFuzzers = [
   concrete(fuzzNumber, 'NumberType'),
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
+  concrete(fuzzNull, 'NullType'),
+  concrete(fuzzUndefined, 'UndefinedType'),
+  concrete(fuzzVoid, 'VoidType'),
+  concrete(fuzzUnknown, 'UnknownType'),
   gen(fuzzUnion, 'UnionType'),
   gen(fuzzInterface, 'InterfaceType'),
   gen(fuzzPartial, 'PartialType'),
+  gen(fuzzArray, 'ArrayType'),
+  gen(fuzzIntersection, 'IntersectionType'),
 ];
