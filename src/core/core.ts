@@ -60,6 +60,20 @@ export function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
   };
 }
 
+export function concreteNamed<T, C extends t.Decoder<unknown, T>>(
+  func: ConcreteFuzzer<T>['func'],
+  name: C['name']
+): Fuzzer<T, C> {
+  return {
+    impl: {
+      type: 'fuzzer',
+      func,
+    },
+    id: name,
+    idType: 'name',
+  };
+}
+
 export function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
   func: basicFuzzGenerator<T, C>,
   tag: C['_tag']
@@ -80,6 +94,10 @@ export function fuzzBoolean(n: number): boolean {
 
 export function fuzzNumber(n: number): number {
   return n;
+}
+
+export function fuzzInt(n: number): t.TypeOf<typeof t.Int> {
+  return Math.floor(n) as t.TypeOf<typeof t.Int>;
 }
 
 export function fuzzString(n: number): string {
@@ -185,6 +203,7 @@ export function fuzzIntersection(
 
 export const coreFuzzers = [
   concrete(fuzzNumber, 'NumberType'),
+  concreteNamed(fuzzInt, 'Int'),
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
   concrete(fuzzNull, 'NullType'),

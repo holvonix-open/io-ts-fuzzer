@@ -7,8 +7,6 @@
 
 After `yarn add io-ts io-ts-fuzzer`...
 
-
-
 ````typescript
 import * as t from 'io-ts';
 import * as fuzz from 'io-ts-fuzzer';
@@ -23,7 +21,8 @@ function fuzz() {
   // Builds a particular fuzzer from the registry.
   const fuzzer = fuzz.exampleGenerator(r, target);
 
-  // Make examples.
+  // Make examples. The input number fully determines
+  // the output example.
   console.log(fuzzer.encode(0));
   console.log(fuzzer.encode(1));
   console.log(fuzzer.encode(2));
@@ -45,6 +44,16 @@ Currently supports:
 * `t.undefined`
 * `t.void`
 * `t.unknown`
+* `t.Int`
+
+## Use Cases
+
+### Verifying Decoder Behavior
+
+Given a `d = t.Decoder<I,A>` (aka a `t.Type`), `fuzz.exampleGenerator` will
+build a `t.Encoder<number,A>` that will give example instances of `A`.
+The example instances should all pass on `d.decode`, which should return
+an identical example.  No exceptions should be thrown.
 
 
 ## License

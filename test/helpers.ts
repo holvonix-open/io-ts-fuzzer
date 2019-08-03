@@ -14,9 +14,10 @@ export const types = [
   t.void,
   t.unknown,
   t.array(t.string),
+  t.Int,
 
   // Complex types
-  t.type({ s: t.string, m: t.type({ n: t.number }) }),
+  t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({
     s: t.union([t.string, t.number, t.partial({ n: t.number, z: t.string })]),
     m: t.type({ n: t.number }),
@@ -33,13 +34,14 @@ export interface WeirdStringBrand {
   readonly WeirdString: unique symbol;
 }
 
+const weirdString = t.brand(
+  t.string,
+  (a): a is t.Branded<string, WeirdStringBrand> => a.length > 4,
+  'WeirdString'
+);
+
 export const unknownTypes = [
-  t.Int,
-  t.union([t.string, t.Int]),
-  t.brand(
-    t.string,
-    (a): a is t.Branded<string, WeirdStringBrand> => a.length > 4,
-    'WeirdString'
-  ),
+  weirdString,
+  t.union([t.string, weirdString]),
   customStringDecoder,
 ];

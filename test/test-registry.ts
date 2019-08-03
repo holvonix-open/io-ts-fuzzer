@@ -11,8 +11,12 @@ describe('registry', () => {
           const r = lib.createCoreRegistry().getFuzzer(b);
           assert.ok(r);
           const x = r!;
-          assert.deepStrictEqual(x.idType, 'tag');
-          assert.deepStrictEqual(x.id, b._tag);
+          assert.ok(x.idType === 'tag' || x.idType === 'name');
+          if (x.idType === 'name') {
+            assert.deepStrictEqual(x.id, b.name);
+          } else {
+            assert.deepStrictEqual(x.id, b._tag);
+          }
         });
       }
     });
