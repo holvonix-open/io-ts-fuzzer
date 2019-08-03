@@ -61,6 +61,7 @@
     "yarn": "rm -rf yarn.lock node_modules/ && yarn",
     "semantic-release": "semantic-release"
   },
+  "sideEffects": false,
   "husky": {
     "hooks": {
       "pre-commit": "yarn clean && yarn run check && yarn test:postinstall"
