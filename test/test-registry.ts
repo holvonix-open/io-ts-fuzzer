@@ -20,5 +20,14 @@ describe('registry', () => {
         });
       }
     });
+
+    describe('#exampleGenerator', () => {
+      for (const b of types) {
+        it(`can create an example generator for \`${b.name}\` type`, () => {
+          const r = lib.createCoreRegistry().exampleGenerator(b);
+          assert.ok(r);
+        });
+      }
+    });
   });
 });

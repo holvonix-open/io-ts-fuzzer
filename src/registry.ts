@@ -1,10 +1,12 @@
-import { Fuzzer } from './fuzzer';
+import { Fuzzer, ExampleGenerator, exampleGenerator } from './fuzzer';
 import * as t from 'io-ts';
 import { coreFuzzers } from './core/';
 
 export interface Registry {
   // tslint:disable-next-line:no-any
-  register(...vv: Array<Fuzzer<any, t.Decoder<unknown, any>>>): void;
+  register(...vv: Array<Fuzzer<any, t.Decoder<unknown, any>>>): Registry;
+
+  exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T>;
 
   getFuzzer<T>(
     a: t.Decoder<unknown, T>
@@ -35,11 +37,22 @@ class RegistryC implements Registry {
     Fuzzer<any, t.Decoder<unknown, unknown>>
   > = new Map();
 
+  readonly exampleGenerator: <T>(
+    d: t.Decoder<unknown, T>
+  ) => ExampleGenerator<T>;
+
+  constructor() {
+    this.exampleGenerator = exampleGenerator.bind(null, this) as <T>(
+      d: t.Decoder<unknown, T>
+    ) => ExampleGenerator<T>;
+  }
+
   // tslint:disable-next-line:no-any
   register(...vv: Array<Fuzzer<any, t.Decoder<unknown, any>>>) {
     for (const v of vv) {
       this.fuzzers.set(fuzzerKey(v), v);
     }
+    return this;
   }
 
   getFuzzer<T>(a: t.Decoder<unknown, T>) {

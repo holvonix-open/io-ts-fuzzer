@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) [![npm](https://img.shields.io/npm/v/io-ts-fuzzer.svg)](https://www.npmjs.com/package/io-ts-fuzzer) [![Build Status](https://travis-ci.com/holvonix-open/io-ts-fuzzer.svg?branch=master)](https://travis-ci.com/holvonix-open/io-ts-fuzzer) [![GitHub last commit](https://img.shields.io/github/last-commit/holvonix-open/io-ts-fuzzer.svg)](https://github.com/holvonix-open/io-ts-fuzzer/commits) [![codecov](https://codecov.io/gh/holvonix-open/io-ts-fuzzer/branch/master/graph/badge.svg)](https://codecov.io/gh/holvonix-open/io-ts-fuzzer) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com) [![DeepScan grade](https://deepscan.io/api/teams/4465/projects/6653/branches/56883/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=4465&pid=6653&bid=56883) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
+`io-ts-fuzzer` lets you generate examples of a given `io-ts` type.
 
 ## Quick Start
 
@@ -30,6 +31,8 @@ function fuzz() {
 }
 ````
 
+## Types Supported
+
 Currently supports:
 
 * `t.number`
@@ -48,12 +51,14 @@ Currently supports:
 
 ## Use Cases
 
-### Verifying Decoder Behavior
+### Generating Conforming Examples and Verifying Decoder Behavior
 
 Given a `d = t.Decoder<I,A>` (aka a `t.Type`), `fuzz.exampleGenerator` will
 build a `t.Encoder<number,A>` that will give example instances of `A`.
 The example instances should all pass on `d.decode`, which should return
 an identical example.  No exceptions should be thrown.
+
+### Fuzzing a Type (TODO)
 
 
 ## License
