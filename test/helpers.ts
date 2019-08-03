@@ -22,3 +22,24 @@ export const types = [
     m: t.type({ n: t.number }),
   }),
 ];
+
+const customStringDecoder: t.Decoder<unknown, string> = {
+  name: 'customStringDecoder',
+  decode: t.string.decode,
+  validate: t.string.validate,
+};
+
+export interface WeirdStringBrand {
+  readonly WeirdString: unique symbol;
+}
+
+export const unknownTypes = [
+  t.Int,
+  t.union([t.string, t.Int]),
+  t.brand(
+    t.string,
+    (a): a is t.Branded<string, WeirdStringBrand> => a.length > 4,
+    'WeirdString'
+  ),
+  customStringDecoder,
+];

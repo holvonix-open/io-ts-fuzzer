@@ -17,11 +17,11 @@ function fuzzerKey(f: Fuzzer<unknown, t.Decoder<unknown, unknown>>): Key {
   return `${f.idType}/${f.id}`;
 }
 
-function decoderKeys(f: t.Decoder<unknown, unknown> | { _tag: string }): Key[] {
+function decoderKeys(
+  f: t.Decoder<unknown, unknown> & ({} | { _tag: string })
+): Key[] {
   const ret: Key[] = [];
-  if ('name' in f) {
-    ret.push(`name/${f.name}`);
-  }
+  ret.push(`name/${f.name}`);
   if ('_tag' in f) {
     ret.push(`tag/${f._tag}`);
   }
