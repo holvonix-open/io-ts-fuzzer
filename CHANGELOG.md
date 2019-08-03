@@ -1,3 +1,5 @@
+## [1.2.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.2.0...v1.2.1) (2019-08-03)
+
 # [1.2.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.1.0...v1.2.0) (2019-08-03)
 
 
