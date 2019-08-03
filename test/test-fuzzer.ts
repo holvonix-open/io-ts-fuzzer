@@ -1,7 +1,6 @@
 import * as assert from 'assert';
 import * as lib from '../src/fuzzer';
 
-import * as t from 'io-ts';
 import { types, unknownTypes } from './helpers';
 import { createCoreRegistry } from '../src/registry';
 import { isRight } from 'fp-ts/lib/Either';

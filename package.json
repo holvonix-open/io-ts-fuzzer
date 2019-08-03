@@ -96,10 +96,7 @@
     "spec": "./build/test/**/test-*.js"
   },
   "dependencies": {
-    "fp-ts": "^2.0.3",
-    "io-ts": "^2.0.0",
-    "io-ts-types": "^0.5.0",
-    "monocle-ts": "^2.0.0"
+    "io-ts": "^2.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.4",
@@ -109,6 +106,7 @@
     "chokidar-cli": "^2.0.0",
     "codecov": "^3.4.0",
     "concurrently": "^4.1.1",
+    "fp-ts": "^2.0.3",
     "gts": "^1.1.0",
     "husky": "^3.0.2",
     "mocha": "^6.2.0",
