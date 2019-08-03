@@ -133,7 +133,7 @@ module.exports = {
     [
       "@semantic-release/release-notes-generator",
       {
-        "writerOpts": writerOpts
+        "writerOpts": writerOpts()
       }
     ],
     "@semantic-release/changelog",
