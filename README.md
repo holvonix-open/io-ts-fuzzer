@@ -5,7 +5,9 @@
 
 ## Quick Start
 
-After `yarn add io-ts io-ts-fuzzer`:
+After `yarn add io-ts io-ts-fuzzer`...
+
+
 
 ````typescript
 import * as t from 'io-ts';
