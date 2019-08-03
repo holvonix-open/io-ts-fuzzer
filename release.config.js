@@ -25,36 +25,34 @@ function writerOpts() {
   return {
     ...base.writerOpts,
     transfom: (commit, context) => {
-      let discard = true;
       const issues = [];
 
       commit.notes.forEach(note => {
-        note.title = `BREAKING CHANGES`
-        discard = false;
-      })
+        note.title = `⚠️ BREAKING CHANGES`;
+      });
 
       switch (commit.type) {
         case `feat`:
-          ret.type = `🚀 Features`; break;
+          commit.type = `🚀 Features`; break;
         case `fix`:
-          ret.type = `🐛 Bug Fixes`; break;
+          commit.type = `🐛 Bug Fixes`; break;
         case `perf`:
-          ret.type = `🏃 Performance Improvements`; break;
+          commit.type = `🏃 Performance Improvements`; break;
         case `revert`:
-          ret.type = `🔙 Reverts`; break;
+          commit.type = `🔙 Reverts`; break;
         case `docs`:
-          ret.type = `📖 Documentation`; break;
+          commit.type = `📖 Documentation`; break;
         case `polish`:
-          ret.type = `💄 Polish`; break;
+          commit.type = `💄 Polish`; break;
         case `refactor`:
-          ret.type = `📦 Code Refactor`; break;
+          commit.type = `📦 Code Refactor`; break;
         case `test`:
-          ret.type = `🔬 ${ret.type} Tests`; break;
+          commit.type = `🔬 ${ret.type} Tests`; break;
         case `build`:
         case `ci`:
-          ret.type = `🔧 Build / Cont. Integration`; break;
+          commit.type = `🔧 Build / Cont. Integration`; break;
         default:
-          ret.type = `🎲 Misc.`; break;
+          commit.type = `🎲 Misc.`; break;
       }
 
       if (commit.scope === `*`) {
@@ -107,50 +105,50 @@ function writerOpts() {
 };
 
 module.exports = {
-	"plugins": [
-		[
-			"@semantic-release/commit-analyzer",
-			{
-				"preset": "angular",
-				"releaseRules": [
-					{
-						"type": "perf",
-						"release": "patch"
-					},
-					{
-						"type": "refactor",
-						"release": "patch"
-					},
-					{
-						"type": "docs",
-						"release": "patch"
-					},
-					{
-						"subject": "/skip-release/",
-						"release": false
-					}
-				]
-			}
-		],
-		[
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "angular",
+        "releaseRules": [
+          {
+            "type": "perf",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "patch"
+          },
+          {
+            "type": "docs",
+            "release": "patch"
+          },
+          {
+            "subject": "/skip-release/",
+            "release": false
+          }
+        ]
+      }
+    ],
+    [
       "@semantic-release/release-notes-generator",
       {
         "writerOpts": writerOpts
       }
     ],
-		"@semantic-release/changelog",
-		[
-			"@semantic-release/npm",
-			{
-				"tarballDir": "npm-dist"
-			}
-		],
-		"@semantic-release/git",
-		[
-			"@semantic-release/github",
-			{
-				"assets": "npm-dist/*.tgz"
-			}
-		]
-	]
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/npm",
+      {
+        "tarballDir": "npm-dist"
+      }
+    ],
+    "@semantic-release/git",
+    [
+      "@semantic-release/github",
+      {
+        "assets": "npm-dist/*.tgz"
+      }
+    ]
+  ]
 };
