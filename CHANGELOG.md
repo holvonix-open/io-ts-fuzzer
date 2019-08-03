@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.1.0...v1.2.0) (2019-08-03)
+
+
+### Features
+
+* support arrays, intersection, null, undefined, void, unknown ([9860450](https://github.com/holvonix-open/io-ts-fuzzer/commit/9860450))
+
+
+### Performance Improvements
+
+* mark package as side-effect-free ([2ef3c69](https://github.com/holvonix-open/io-ts-fuzzer/commit/2ef3c69))
+
 # [1.1.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.0.0...v1.1.0) (2019-08-03)
 
 
