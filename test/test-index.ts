@@ -13,9 +13,9 @@ describe('io-ts-fuzzer', () => {
       describe(`\`${b.name}\` objects`, () => {
         const r = lib.createCoreRegistry()!;
 
-        // tslint:disable-next-line:ban
-        for (const n of [...Array(count).keys()]) {
-          it(`for input ${n}`, () => {
+        it(`for inputs '[0, ${count})`, () => {
+          // tslint:disable-next-line:ban
+          for (const n of [...Array(count).keys()]) {
             // tslint:disable-next-line:no-any
             const p = exampleGenerator<any>(r, b).encode;
             const v = p(n);
@@ -28,8 +28,8 @@ describe('io-ts-fuzzer', () => {
               v,
               `must decode ${JSON.stringify(v)}`
             );
-          });
-        }
+          }
+        });
       });
     }
   });
