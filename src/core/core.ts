@@ -73,24 +73,60 @@ export function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
   };
 }
 
-export function fuzzBoolean(n: number) {
+export function fuzzBoolean(n: number): boolean {
   return n % 2 === 0;
 }
 
-export function fuzzNumber(n: number) {
+export function fuzzNumber(n: number): number {
   return n;
 }
 
-export function fuzzString(n: number) {
+export function fuzzString(n: number): string {
   return `${n}`;
 }
 
 // tslint:disable-next-line:no-any
-export function fuzzUnion(b: t.UnionC<any>): ConcreteFuzzer<any> {
+export function fuzzUnion(b: t.UnionType<t.Any[]>): ConcreteFuzzer<any> {
   return {
     children: b.types,
     func: (n, ...h) => {
       return h[n % h.length].encode(n);
+    },
+  };
+}
+
+export function fuzzInterface(
+  b: t.InterfaceType<t.Props>
+  // tslint:disable-next-line:no-any
+): ConcreteFuzzer<any> {
+  const keys = Object.getOwnPropertyNames(b.props);
+  const vals = keys.map(k => b.props[k]);
+  return {
+    children: vals,
+    func: (n, ...h) => {
+      const ret = Object.create(null);
+      h.forEach((v, i) => {
+        ret[keys[i]] = v.encode(n);
+      });
+      return ret;
+    },
+  };
+}
+
+// tslint:disable-next-line:no-any
+export function fuzzPartial(b: t.PartialType<t.Props>): ConcreteFuzzer<any> {
+  const keys = Object.getOwnPropertyNames(b.props);
+  const vals = keys.map(k => b.props[k]);
+  return {
+    children: vals,
+    func: (n, ...h) => {
+      const ret = Object.create(null);
+      h.forEach((v, i) => {
+        if (n & (2 ** i)) {
+          ret[keys[i]] = v.encode(n);
+        }
+      });
+      return ret;
     },
   };
 }
@@ -100,4 +136,6 @@ export const coreFuzzers = [
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
   gen(fuzzUnion, 'UnionType'),
+  gen(fuzzInterface, 'InterfaceType'),
+  gen(fuzzPartial, 'PartialType'),
 ];
