@@ -16,7 +16,7 @@ function fuzz() {
   const r = fuzz.createCoreRegistry();
 
   // Type to fuzz
-  const target = t.union([t.string, t.number, t.boolean]);
+  const target = t.union([t.string, t.type({n:t.number, b:t.boolean})]);
 
   // Builds a particular fuzzer from the registry.
   const fuzzer = fuzz.exampleGenerator(r, target);
@@ -28,6 +28,15 @@ function fuzz() {
   console.log(fuzzer.encode(493));
 }
 ````
+
+Currently supports:
+
+* `t.number`
+* `t.string`
+* `t.boolean`
+* `t.union`
+* `t.type` (interface)
+* `t.partial`
 
 
 ## License
