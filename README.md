@@ -1,17 +1,31 @@
-# io-ts-fuzzer - 
+# io-ts-fuzzer - Fuzzing for io-ts codecs and types
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) [![npm](https://img.shields.io/npm/v/io-ts-fuzzer.svg)](https://www.npmjs.com/package/io-ts-fuzzer) [![Build Status](https://travis-ci.com/holvonix-open/io-ts-fuzzer.svg?branch=master)](https://travis-ci.com/holvonix-open/io-ts-fuzzer) [![GitHub last commit](https://img.shields.io/github/last-commit/holvonix-open/io-ts-fuzzer.svg)](https://github.com/holvonix-open/io-ts-fuzzer/commits) [![codecov](https://codecov.io/gh/holvonix-open/io-ts-fuzzer/branch/master/graph/badge.svg)](https://codecov.io/gh/holvonix-open/io-ts-fuzzer) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com) [![DeepScan grade](https://deepscan.io/api/teams/XX/projects/YY/branches/ZZ/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=XX&pid=YY&bid=ZZ) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) [![npm](https://img.shields.io/npm/v/io-ts-fuzzer.svg)](https://www.npmjs.com/package/io-ts-fuzzer) [![Build Status](https://travis-ci.com/holvonix-open/io-ts-fuzzer.svg?branch=master)](https://travis-ci.com/holvonix-open/io-ts-fuzzer) [![GitHub last commit](https://img.shields.io/github/last-commit/holvonix-open/io-ts-fuzzer.svg)](https://github.com/holvonix-open/io-ts-fuzzer/commits) [![codecov](https://codecov.io/gh/holvonix-open/io-ts-fuzzer/branch/master/graph/badge.svg)](https://codecov.io/gh/holvonix-open/io-ts-fuzzer) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com) [![DeepScan grade](https://deepscan.io/api/teams/4465/projects/6653/branches/56883/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=4465&pid=6653&bid=56883) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 
 ## Quick Start
 
-After `yarn add io-ts-fuzzer`:
+After `yarn add io-ts io-ts-fuzzer`:
 
 ````typescript
-import { TODO } from 'io-ts-fuzzer';
+import * as t from 'io-ts';
+import * as fuzz from 'io-ts-fuzzer';
 
-async function getIt() {
-  // TODO
+function fuzz() {
+  // Fuzzers for common types
+  const r = fuzz.createCoreRegistry();
+
+  // Type to fuzz
+  const target = t.union([t.string, t.number, t.boolean]);
+
+  // Builds a particular fuzzer from the registry.
+  const fuzzer = fuzz.exampleGenerator(r, target);
+
+  // Make examples.
+  console.log(fuzzer.encode(0));
+  console.log(fuzzer.encode(1));
+  console.log(fuzzer.encode(2));
+  console.log(fuzzer.encode(493));
 }
 ````
 

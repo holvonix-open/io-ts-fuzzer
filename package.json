@@ -7,7 +7,11 @@
     "url": "https://github.com/holvonix-open/io-ts-fuzzer.git"
   },
   "keywords": [
-    "io-ts", "codecs", "fuzzer", "security"
+    "io-ts",
+    "codecs",
+    "fuzzer",
+    "fuzzing",
+    "security"
   ],
   "engines": {
     "node": "^10.0.0 || ^ 12.0.0",
@@ -22,42 +26,73 @@
     "NOTICE",
     "README.md"
   ],
+  "author": "Holvonix LLC",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": false,
+  "scripts": {
+    "t": "yarn test  --inspect --grep='#e2e|#int' --invert",
+    "watch:build": "yarn run --silent build:core --watch",
+    "watch:test": "yarn run --silent test-impl --watch --grep='#e2e|#int' --invert -R min",
+    "watch:test-cov": "chokidar --throttle 750 --debounce 500 --silent --initial \"build/**/*.js\" -c \"yarn run --silent watch:test-impl\"",
+    "watch:test-impl": "yarn run --silent test-impl-lcov --grep='#e2e|#int' --invert -R min",
+    "w": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test\"",
+    "wc": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test-cov\"",
+    "postinstall": "yarn test:postinstall",
+    "build:core": "tsc -p .",
+    "build": "yarn build:core",
+    "clean.builds": "gts clean",
+    "clean": "yarn clean.builds && yarn clean.tests",
+    "clean.tests": "rm -rf *.lcov .nyc_output *.log coverage",
+    "test:postinstall": "yarn clean && yarn build && yarn test-impl --grep='#e2e' --invert",
+    "test": "yarn clean && yarn build && yarn test-impl",
+    "test-impl": "nyc --reporter=text --reporter=lcov mocha",
+    "test-impl-lcov": "nyc --reporter=lcov mocha",
+    "test-coverage": "yarn test && yarn report-coverage",
+    "report-coverage": "nyc report --reporter=json && codecov -F unit -f coverage/*.json",
+    "lint": "yarn fix && yarn run check",
+    "check": "gts check",
+    "fix": "gts fix",
+    "preversion": "yarn test",
+    "docs": "yarn clean && yarn build && rm -rf docs && mkdir -p docs && ( mocha --grep='#private' --invert -R markdown >docs/index.md )",
+    "test-unit": "yarn test --grep='#e2e|#int' --invert",
+    "test-e2e": "yarn test --grep='#e2e'",
+    "test-int": "yarn test --grep='#int'",
+    "up": "yarn upgrade-interactive --latest",
+    "yarn": "rm -rf yarn.lock node_modules/ && yarn",
+    "semantic-release": "semantic-release"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn clean && yarn run check && yarn test:postinstall"
+    }
+  },
   "nyc": {
+    "skip-full": true,
     "cache": false,
     "extension": [
       ".ts",
       ".tsx"
     ],
-    "exclude": [
-      "prettier.config.js",
-      "**/*.d.ts",
-      "test/**/*.*",
-      "build/**/**/*.js"
+    "require": [
+      "source-map-support/register",
+      "ts-node/register"
     ],
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "build/src/**/*.js",
+      "build/src/**/*.jsx"
+    ],
+    "exclude": [],
     "all": true
   },
-  "author": "Holvonix LLC",
-  "license": "SEE LICENSE IN LICENSE",
-  "private": false,
-  "scripts": {
-    "t": "yarn fix && yarn test --grep='#slow' --invert",
-    "cleantests": "rm -rf *.lcov .nyc_output coverage",
-    "clean": "gts clean",
-    "start": "node index.js",
-    "debug": "node --inspect index.js",
-    "cleanstart": "yarn clean; yarn start",
-    "test": "nyc ts-mocha -p ./tsconfig.json 'test/**/*.ts'",
-    "test-coverage": "yarn clean && yarn test && yarn report-coverage",
-    "report-coverage": "nyc report --reporter=json && codecov -F unit -f coverage/*.json",
-    "lint": "yarn fix && yarn run check",
-    "check": "gts check",
-    "compile": "tsc -p .",
-    "fix": "gts fix",
-    "prepare": "yarn clean && yarn run check && yarn run compile",
-    "pretest": "yarn run compile",
-    "posttest": "yarn run check",
-    "preversion": "yarn test",
-    "semantic-release": "semantic-release"
+  "mocha": {
+    "require": [
+      "source-map-support/register",
+      "ts-node/register"
+    ],
+    "forbid-pending": true,
+    "spec": "./build/test/**/test-*.js"
   },
   "release": {
     "plugins": [
@@ -97,14 +132,22 @@
       "@semantic-release/github"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "fp-ts": "^2.0.3",
+    "io-ts": "^2.0.0",
+    "io-ts-types": "^0.5.0",
+    "monocle-ts": "^2.0.0"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.4",
     "@semantic-release/git": "^7.0.16",
     "@types/mocha": "^5.2.5",
     "@types/node": "^12.6.9",
+    "chokidar-cli": "^2.0.0",
     "codecov": "^3.4.0",
+    "concurrently": "^4.1.1",
     "gts": "^1.1.0",
+    "husky": "^3.0.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "semantic-release": "^15.13.19",
