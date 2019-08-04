@@ -11,16 +11,18 @@
 * further simply types with defaults ([8dd6364](https://github.com/holvonix-open/io-ts-fuzzer/commit/8dd6364))
 * improve typesafety by eliminating use of any ([2af1539](https://github.com/holvonix-open/io-ts-fuzzer/commit/2af1539))
 
-<details><summary>Other Changes</summary>
+<details><summary>🔧 Build / Continuous Integration</summary>
 <p>
-
-### 🔧 Build / Continuous Integration
 
 * fix dep on release-config-js ([5c3aa19](https://github.com/holvonix-open/io-ts-fuzzer/commit/5c3aa19))
 * use release-config-js ([294f594](https://github.com/holvonix-open/io-ts-fuzzer/commit/294f594))
 
+</p>
+</details>
 
-### 🔬 Tests
+
+<details><summary>🔬 Tests</summary>
+<p>
 
 * improve registration tests ([1124707](https://github.com/holvonix-open/io-ts-fuzzer/commit/1124707))
 
