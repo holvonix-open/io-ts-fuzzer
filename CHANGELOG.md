@@ -1,3 +1,15 @@
+## [1.4.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.0...v1.4.1) (2019-08-04)
+
+
+### 📖 Documentation
+
+* try changelog with misc changes collapsed ([d124c50](https://github.com/holvonix-open/io-ts-fuzzer/commit/d124c50))
+
+
+### 🧦 Miscellaneous
+
+* Update CHANGELOG.md ([93c485b](https://github.com/holvonix-open/io-ts-fuzzer/commit/93c485b))
+
 # [1.4.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.3.0...v1.4.0) (2019-08-04)
 
 
