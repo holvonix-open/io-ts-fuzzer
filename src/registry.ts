@@ -3,8 +3,10 @@ import * as t from 'io-ts';
 import { coreFuzzers } from './core/';
 
 export interface Registry {
-  // tslint:disable-next-line:no-any
-  register(...vv: Array<Fuzzer<any, t.Decoder<unknown, any>>>): Registry;
+  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
+  register(
+    ...vv: Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>
+  ): Registry;
 
   exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T>;
 
@@ -33,8 +35,7 @@ function decoderKeys(
 class RegistryC implements Registry {
   readonly fuzzers: Map<
     Key,
-    // tslint:disable-next-line:no-any
-    Fuzzer<any, t.Decoder<unknown, unknown>>
+    Fuzzer<unknown, t.Decoder<unknown, unknown>>
   > = new Map();
 
   readonly exampleGenerator: <T>(
@@ -47,21 +48,23 @@ class RegistryC implements Registry {
     ) => ExampleGenerator<T>;
   }
 
-  // tslint:disable-next-line:no-any
-  register(...vv: Array<Fuzzer<any, t.Decoder<unknown, any>>>) {
+  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
+  register(...vv: Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>) {
     for (const v of vv) {
       this.fuzzers.set(fuzzerKey(v), v);
     }
     return this;
   }
 
-  getFuzzer<T>(a: t.Decoder<unknown, T>) {
+  getFuzzer<T>(
+    a: t.Decoder<unknown, T>
+  ): Fuzzer<T, t.Decoder<unknown, T>> | null {
     const keys = decoderKeys(a);
 
     for (const c of keys) {
       const v = this.fuzzers.get(c);
       if (v) {
-        return v;
+        return v as Fuzzer<T, t.Decoder<unknown, T>>;
       }
     }
     return null;
@@ -74,7 +77,8 @@ export function createRegistry(): Registry {
 
 export function createCoreRegistry(): Registry {
   const ret = createRegistry();
-  // tslint:disable-next-line:no-any
-  ret.register(...(coreFuzzers as Array<Fuzzer<any, t.Decoder<unknown, any>>>));
+  ret.register(
+    ...(coreFuzzers as Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>)
+  );
   return ret;
 }
