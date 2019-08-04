@@ -11,6 +11,8 @@
 * further simply types with defaults ([8dd6364](https://github.com/holvonix-open/io-ts-fuzzer/commit/8dd6364))
 * improve typesafety by eliminating use of any ([2af1539](https://github.com/holvonix-open/io-ts-fuzzer/commit/2af1539))
 
+<details><summary>Other Changes</summary>
+<p>
 
 ### 🔧 Build / Continuous Integration
 
@@ -21,6 +23,9 @@
 ### 🔬 Tests
 
 * improve registration tests ([1124707](https://github.com/holvonix-open/io-ts-fuzzer/commit/1124707))
+
+</p>
+</details>
 
 # [1.3.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.2.2...v1.3.0) (2019-08-03)
 
