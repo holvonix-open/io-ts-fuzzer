@@ -11,24 +11,21 @@ export type BasicType =
   | t.BooleanType
   | t.AnyArrayType
   | t.AnyDictionaryType
-  | t.RefinementType<t.Any>
+  | t.RefinementType<t.Mixed>
   | t.LiteralType<string | number | boolean>
   | t.KeyofType<{ [key: string]: unknown }>
-  | t.RecursiveType<t.Any>
-  | t.ArrayType<t.Any>
-  // tslint:disable-next-line:no-any
-  | t.InterfaceType<any>
-  // tslint:disable-next-line:no-any
-  | t.PartialType<any>
-  | t.DictionaryType<t.Any, t.Any>
-  | t.UnionType<t.Any[]>
-  | t.IntersectionType<t.Any[]>
-  // tslint:disable-next-line:no-any
-  | t.InterfaceType<any>
-  | t.TupleType<t.Any[]>
-  | t.ReadonlyType<t.Any>
-  | t.ReadonlyArrayType<t.Any>
-  | t.ExactType<t.Any>
+  | t.RecursiveType<t.Mixed>
+  | t.ArrayType<t.Mixed>
+  | t.InterfaceType<unknown>
+  | t.PartialType<unknown>
+  | t.DictionaryType<t.Mixed, t.Mixed>
+  | t.UnionType<t.Mixed[]>
+  | t.IntersectionType<t.Mixed[]>
+  | t.InterfaceType<unknown>
+  | t.TupleType<t.Mixed[]>
+  | t.ReadonlyType<t.Mixed>
+  | t.ReadonlyArrayType<t.Mixed>
+  | t.ExactType<t.Mixed>
   | t.UnknownType;
 
 export type basicFuzzGenerator<
@@ -118,8 +115,7 @@ export function fuzzUnknown(n: number): unknown {
   return n;
 }
 
-// tslint:disable-next-line:no-any
-export function fuzzUnion(b: t.UnionType<t.Any[]>): ConcreteFuzzer<any> {
+export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
   return {
     children: b.types,
     func: (n, ...h) => {
@@ -130,8 +126,7 @@ export function fuzzUnion(b: t.UnionType<t.Any[]>): ConcreteFuzzer<any> {
 
 export function fuzzInterface(
   b: t.InterfaceType<t.Props>
-  // tslint:disable-next-line:no-any
-): ConcreteFuzzer<any> {
+): ConcreteFuzzer<unknown> {
   const keys = Object.getOwnPropertyNames(b.props);
   const vals = keys.map(k => b.props[k]);
   return {
@@ -146,10 +141,7 @@ export function fuzzInterface(
   };
 }
 
-export function fuzzArray(
-  b: t.ArrayType<t.Mixed>
-  // tslint:disable-next-line:no-any
-): ConcreteFuzzer<any[]> {
+export function fuzzArray(b: t.ArrayType<t.Mixed>): ConcreteFuzzer<unknown[]> {
   return {
     children: [b.type],
     func: (n, h0) => {
@@ -162,8 +154,9 @@ export function fuzzArray(
   };
 }
 
-// tslint:disable-next-line:no-any
-export function fuzzPartial(b: t.PartialType<t.Props>): ConcreteFuzzer<any> {
+export function fuzzPartial(
+  b: t.PartialType<t.Props>
+): ConcreteFuzzer<unknown> {
   const keys = Object.getOwnPropertyNames(b.props);
   const vals = keys.map(k => b.props[k]);
   return {
@@ -182,13 +175,11 @@ export function fuzzPartial(b: t.PartialType<t.Props>): ConcreteFuzzer<any> {
 
 export function fuzzIntersection(
   b: t.IntersectionType<t.Any[]>
-  // tslint:disable-next-line:no-any
-): ConcreteFuzzer<any> {
+): ConcreteFuzzer<unknown> {
   return {
     children: b.types,
     func: (n, ...h) => {
-      // tslint:disable-next-line:no-any
-      let ret: any = undefined;
+      let ret: unknown = undefined;
       h.forEach((v, i) => {
         if (ret === undefined) {
           ret = v.encode(n);

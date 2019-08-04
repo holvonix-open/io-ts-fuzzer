@@ -19,8 +19,7 @@ export interface ImmediateConcreteFuzzer<T> extends ConcreteFuzzer<T> {
 export interface ConcreteFuzzer<T> {
   children?: Array<t.Decoder<unknown, unknown>>;
 
-  // tslint:disable-next-line:no-any
-  func: (n: number, ...h: Array<ExampleGenerator<any>>) => T;
+  func: (n: number, ...h: Array<ExampleGenerator<unknown>>) => T;
 }
 
 export type fuzzGenerator<T, C extends t.Decoder<unknown, T>> = (

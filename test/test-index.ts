@@ -16,15 +16,12 @@ describe('io-ts-fuzzer', () => {
         it(`for inputs '[0, ${count})`, () => {
           // tslint:disable-next-line:ban
           for (const n of [...Array(count).keys()]) {
-            // tslint:disable-next-line:no-any
-            const p = exampleGenerator<any>(r, b).encode;
+            const p = exampleGenerator(r, b).encode;
             const v = p(n);
-            // tslint:disable-next-line:no-any
-            const d = b.decode(v) as any;
+            const d = b.decode(v);
             assert.ok(isRight(d), `must decode ${JSON.stringify(v)}`);
             assert.deepStrictEqual(
-              // tslint:disable-next-line:no-any
-              (d as Right<any>).right,
+              (d as Right<unknown>).right,
               v,
               `must decode ${JSON.stringify(v)}`
             );
