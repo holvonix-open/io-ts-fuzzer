@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.1...v1.4.2) (2019-08-04)
+
+
+### 🐛 Bug Fixes
+
+* fp-ts needs to be a dependency, peer to io-ts ([fd2ce1b](https://github.com/holvonix-open/io-ts-fuzzer/commit/fd2ce1b))
+
 ## [1.4.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.0...v1.4.1) (2019-08-04)
 
 
