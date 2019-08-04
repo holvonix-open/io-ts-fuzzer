@@ -1,7 +1,10 @@
 import * as t from 'io-ts';
 import { Registry } from './registry';
 
-export interface Fuzzer<T, C extends t.Decoder<unknown, T>> {
+export interface Fuzzer<
+  T = unknown,
+  C extends t.Decoder<unknown, T> = t.Decoder<unknown, T>
+> {
   id: string;
   idType: 'name' | 'tag';
   impl: FuzzerGenerator<T, C> | ImmediateConcreteFuzzer<T>;

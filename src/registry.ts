@@ -4,20 +4,16 @@ import { coreFuzzers } from './core/';
 
 export interface Registry {
   register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
-  register(
-    ...vv: Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>
-  ): Registry;
+  register(...vv: Fuzzer[]): Registry;
 
   exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T>;
 
-  getFuzzer<T>(
-    a: t.Decoder<unknown, T>
-  ): Fuzzer<T, t.Decoder<unknown, T>> | null;
+  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null;
 }
 
 type Key = string;
 
-function fuzzerKey(f: Fuzzer<unknown, t.Decoder<unknown, unknown>>): Key {
+function fuzzerKey(f: Fuzzer): Key {
   return `${f.idType}/${f.id}`;
 }
 
@@ -33,10 +29,7 @@ function decoderKeys(
 }
 
 class RegistryC implements Registry {
-  readonly fuzzers: Map<
-    Key,
-    Fuzzer<unknown, t.Decoder<unknown, unknown>>
-  > = new Map();
+  readonly fuzzers: Map<Key, Fuzzer> = new Map();
 
   readonly exampleGenerator: <T>(
     d: t.Decoder<unknown, T>
@@ -49,22 +42,19 @@ class RegistryC implements Registry {
   }
 
   register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
-  register(...vv: Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>) {
+  register(...vv: Fuzzer[]) {
     for (const v of vv) {
       this.fuzzers.set(fuzzerKey(v), v);
     }
     return this;
   }
 
-  getFuzzer<T>(
-    a: t.Decoder<unknown, T>
-  ): Fuzzer<T, t.Decoder<unknown, T>> | null {
+  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null {
     const keys = decoderKeys(a);
-
     for (const c of keys) {
       const v = this.fuzzers.get(c);
       if (v) {
-        return v as Fuzzer<T, t.Decoder<unknown, T>>;
+        return v as Fuzzer<T>;
       }
     }
     return null;
@@ -77,8 +67,6 @@ export function createRegistry(): Registry {
 
 export function createCoreRegistry(): Registry {
   const ret = createRegistry();
-  ret.register(
-    ...(coreFuzzers as Array<Fuzzer<unknown, t.Decoder<unknown, unknown>>>)
-  );
+  ret.register(...(coreFuzzers as Fuzzer[]));
   return ret;
 }
