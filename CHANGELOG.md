@@ -1,3 +1,20 @@
+# [1.6.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.5.0...v1.6.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* support keyof ([1bc1f8b](https://github.com/holvonix-open/io-ts-fuzzer/commit/1bc1f8b))
+
+
+### 💄 Polish
+
+* docs typo ([2e85b75](https://github.com/holvonix-open/io-ts-fuzzer/commit/2e85b75))
+
+
+### 📖 Documentation
+
+* make clear nested types are supported ([0d113e2](https://github.com/holvonix-open/io-ts-fuzzer/commit/0d113e2))
+
 # [1.5.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.3...v1.5.0) (2019-08-05)
 
 
