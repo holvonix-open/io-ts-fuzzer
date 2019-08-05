@@ -15,7 +15,12 @@ export const types = [
   t.unknown,
   t.array(t.string),
   t.Int,
-
+  t.literal('hello'),
+  t.literal(34.4),
+  t.literal(true),
+  t.literal(''),
+  t.literal(0),
+  t.literal(false),
   // Complex types
   t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({

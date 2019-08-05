@@ -48,6 +48,7 @@ Currently supports:
 * `t.void`
 * `t.unknown`
 * `t.Int`
+* `t.literal`
 
 ## Use Cases
 
