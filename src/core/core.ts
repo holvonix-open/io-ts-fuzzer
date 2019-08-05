@@ -144,23 +144,6 @@ export function fuzzKeyof(
   };
 }
 
-export function fuzzInterface(
-  b: t.InterfaceType<t.Props>
-): ConcreteFuzzer<unknown> {
-  const keys = Object.getOwnPropertyNames(b.props);
-  const vals = keys.map(k => b.props[k]);
-  return {
-    children: vals,
-    func: (n, ...h) => {
-      const ret = Object.create(null);
-      h.forEach((v, i) => {
-        ret[keys[i]] = v.encode(n + i);
-      });
-      return ret;
-    },
-  };
-}
-
 export function fuzzTuple(
   b: t.TupleType<t.Mixed[]>
 ): ConcreteFuzzer<unknown[]> {
@@ -198,9 +181,11 @@ export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
  */
 export const fuzzArray = fuzzArrayWithMaxLength();
 
-const fuzzPartialWithExtraCodec = (
-  extra: t.Props = { ___0000_extra_: t.number }
-) => (b: t.PartialType<t.Props>): ConcreteFuzzer<unknown> => {
+export const defaultExtraProps = { ___0000_extra_: t.number };
+
+const fuzzPartialWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
+  b: t.PartialType<t.Props>
+): ConcreteFuzzer<unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
   const xx = Object.getOwnPropertyNames(extra);
   const keys = Object.getOwnPropertyNames(b.props).concat(
@@ -216,7 +201,7 @@ const fuzzPartialWithExtraCodec = (
       h.forEach((v, i) => {
         if (n & (2 ** i)) {
           // Only allow key indices from the original type
-          // or added keys without indices.
+          // or added keys not present in original type.
           if (i < kk.length || !kk.includes(keys[i])) {
             ret[keys[i]] = v.encode(n + i);
           }
@@ -227,7 +212,7 @@ const fuzzPartialWithExtraCodec = (
   };
 };
 
-export function partialFuzzer(extra: t.Props = { ___0000_extra_: t.number }) {
+export function partialFuzzer(extra: t.Props = defaultExtraProps) {
   return gen(fuzzPartialWithExtraCodec(extra), 'PartialType');
 }
 
@@ -235,6 +220,45 @@ export function partialFuzzer(extra: t.Props = { ___0000_extra_: t.number }) {
  * @deprecated
  */
 export const fuzzPartial = fuzzPartialWithExtraCodec();
+
+const fuzzInterfaceWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
+  b: t.InterfaceType<t.Props>
+): ConcreteFuzzer<unknown> => {
+  const kk = Object.getOwnPropertyNames(b.props);
+  const xx = Object.getOwnPropertyNames(extra);
+  const keys = Object.getOwnPropertyNames(b.props).concat(
+    Object.getOwnPropertyNames(extra)
+  );
+  const vals = keys.map((k, i) =>
+    i < kk.length ? b.props[k] : extra[xx[i - kk.length]]
+  );
+  return {
+    children: vals,
+    func: (n, ...h) => {
+      const ret = Object.create(null);
+      h.forEach((v, i) => {
+        if (i < kk.length) {
+          ret[keys[i]] = v.encode(n + i);
+        } else if (n & (2 ** (i - kk.length))) {
+          // Only allow added keys not present in original type.
+          if (!kk.includes(keys[i])) {
+            ret[keys[i]] = v.encode(n + i);
+          }
+        }
+      });
+      return ret;
+    },
+  };
+};
+
+export function interfaceFuzzer(extra: t.Props = defaultExtraProps) {
+  return gen(fuzzInterfaceWithExtraCodec(extra), 'InterfaceType');
+}
+
+/**
+ * @deprecated
+ */
+export const fuzzInterface = fuzzInterfaceWithExtraCodec();
 
 export function fuzzIntersection(
   b: t.IntersectionType<t.Any[]>
@@ -264,7 +288,7 @@ export const coreFuzzers = [
   concrete(fuzzVoid, 'VoidType'),
   concrete(fuzzUnknown, 'UnknownType'),
   gen(fuzzUnion, 'UnionType'),
-  gen(fuzzInterface, 'InterfaceType'),
+  interfaceFuzzer(),
   partialFuzzer(),
   arrayFuzzer(),
   gen(fuzzIntersection, 'IntersectionType'),

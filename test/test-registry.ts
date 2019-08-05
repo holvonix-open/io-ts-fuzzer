@@ -173,6 +173,20 @@ describe('registry', () => {
             }
           });
 
+          it(`overrides apply to the underlying registry`, () => {
+            const b = t.array(t.number);
+            const r0 = lib.createCoreRegistry();
+            lib.fluent(r0).withArrayFuzzer(3);
+            const r = r0.exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(r.encode(i).length <= 3);
+            }
+          });
+        });
+      });
+
+      describe('#withPartialFuzzer', () => {
+        describe('on the core registry', () => {
           it(`overrides the partial object extra properties`, () => {
             const b = t.partial({ a: t.number });
             const r0 = lib.createCoreRegistry();
@@ -188,15 +202,29 @@ describe('registry', () => {
             assert.ok(keys.has('a'));
             assert.ok(keys.has('b'));
           });
+        });
+      });
 
-          it(`overrides apply to the underlying registry`, () => {
-            const b = t.array(t.number);
+      describe('#withInterfaceFuzzer', () => {
+        describe('on the core registry', () => {
+          it(`overrides the partial object extra properties`, () => {
+            const b = t.type({ a: t.number, j: t.boolean });
             const r0 = lib.createCoreRegistry();
-            lib.fluent(r0).withArrayFuzzer(3);
-            const r = r0.exampleGenerator(b);
-            for (let i = 0; i < 100; i++) {
-              assert.ok(r.encode(i).length <= 3);
+            const r = lib
+              .fluent(r0)
+              .withInterfaceFuzzer({ b: t.string })
+              .exampleGenerator(b);
+            const keys = new Set<string>();
+            for (let i = 0; i < 10; i++) {
+              const ek = Object.keys(r.encode(i));
+              assert.ok(ek.includes('a'));
+              assert.ok(ek.includes('j'));
+              ek.map(x => keys.add(x));
             }
+            assert.deepStrictEqual(keys.size, 3);
+            assert.ok(keys.has('a'));
+            assert.ok(keys.has('j'));
+            assert.ok(keys.has('b'));
           });
         });
       });
