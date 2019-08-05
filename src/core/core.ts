@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
-import { isLeft } from 'fp-ts/lib/Either';
+import { isLeft, isRight } from 'fp-ts/lib/Either';
 
 export type BasicType =
   | t.NumberType
@@ -18,6 +18,7 @@ export type BasicType =
   | t.LiteralType<string | number | boolean>
   | t.KeyofType<{ [key: string]: unknown }>
   | t.TupleType<t.Mixed[]>
+  | t.ExactType<t.Mixed>
   // not yet supported:
   | t.AnyArrayType
   | t.AnyDictionaryType
@@ -25,8 +26,7 @@ export type BasicType =
   | t.RecursiveType<t.Mixed>
   | t.DictionaryType<t.Mixed, t.Mixed>
   | t.ReadonlyType<t.Mixed>
-  | t.ReadonlyArrayType<t.Mixed>
-  | t.ExactType<t.Mixed>;
+  | t.ReadonlyArrayType<t.Mixed>;
 
 export type basicFuzzGenerator<
   T,
@@ -152,6 +152,21 @@ export function fuzzTuple(
     children: b.types,
     func: (n, ...h) => {
       return h.map((v, i) => v.encode(n + i));
+    },
+  };
+}
+
+export function fuzzExact(b: t.ExactC<t.HasProps>): ConcreteFuzzer<unknown> {
+  return {
+    children: [b.type],
+    func: (n, h0) => {
+      const r = h0.encode(n);
+      const d = b.decode(r);
+      /* istanbul ignore if */
+      if (!isRight(d)) {
+        throw new Error(`codec failed to decode underlying example`);
+      }
+      return d.right;
     },
   };
 }
@@ -291,19 +306,20 @@ export function fuzzIntersection(
 
 export const coreFuzzers = [
   concrete(fuzzNumber, 'NumberType'),
+  concreteNamed(fuzzInt, 'Int'),
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
   concrete(fuzzNull, 'NullType'),
   concrete(fuzzUndefined, 'UndefinedType'),
   concrete(fuzzVoid, 'VoidType'),
   concrete(fuzzUnknown, 'UnknownType'),
-  gen(fuzzUnion, 'UnionType'),
   interfaceFuzzer(),
   partialFuzzer(),
   arrayFuzzer(),
+  gen(fuzzExact, 'ExactType'),
+  gen(fuzzUnion, 'UnionType'),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),
   gen(fuzzKeyof, 'KeyofType'),
   gen(fuzzTuple, 'TupleType'),
-  concreteNamed(fuzzInt, 'Int'),
 ];

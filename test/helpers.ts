@@ -11,6 +11,22 @@ export const types = [
   t.type({ s: t.string, m: t.number, ___0000_extra_: t.string }),
   t.partial({ s: t.string, m: t.number }),
   t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+  t.exact(t.type({ s: t.string, m: t.number })),
+  t.exact(t.type({ s: t.string, m: t.number, ___0000_extra_: t.string })),
+  t.exact(t.partial({ s: t.string, m: t.number })),
+  t.exact(t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })),
+  t.exact(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.type({ s: t.string, j: t.boolean }),
+    ])
+  ),
+  t.exact(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.type({ s2: t.string, j: t.boolean }),
+    ])
+  ),
   t.null,
   t.undefined,
   t.void,

@@ -51,6 +51,7 @@ Currently supports (and their nested closure):
 * `t.literal`
 * `t.keyof`
 * `t.tuple`
+* `t.exact`
 
 ## Use Cases
 
