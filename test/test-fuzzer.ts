@@ -4,6 +4,7 @@ import * as lib from '../src/fuzzer';
 import { types, unknownTypes, runtimeFailTypes } from './helpers';
 import { createCoreRegistry } from '../src/registry';
 import { isRight } from 'fp-ts/lib/Either';
+import { inspect } from 'util';
 
 describe('fuzzer', () => {
   describe('#exampleGenerator', () => {
@@ -31,7 +32,8 @@ describe('fuzzer', () => {
     for (const b of types) {
       it(`can fuzz \`${b.name}\` type`, () => {
         const r = createCoreRegistry();
-        assert.ok(isRight(b.decode(lib.exampleOf(b, r, 0))));
+        const ex = lib.exampleOf(b, r, 0);
+        assert.ok(isRight(b.decode(ex)), inspect(ex));
       });
     }
     for (const b of runtimeFailTypes) {
