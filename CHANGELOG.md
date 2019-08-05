@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.8.0...v1.9.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* support configuring extra properties for partial fuzzers ([5e80982](https://github.com/holvonix-open/io-ts-fuzzer/commit/5e80982))
+
 # [1.8.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.7.0...v1.8.0) (2019-08-05)
 
 
