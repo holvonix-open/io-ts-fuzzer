@@ -37,7 +37,7 @@
     "watch:test-impl": "yarn run --silent test-impl-lcov --grep='#e2e|#int' --invert -R min",
     "w": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test\"",
     "wc": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test-cov\"",
-    "postinstall": "yarn test:postinstall",
+    "prepare": "yarn clean && yarn run check && yarn run build",
     "build:core": "tsc -p .",
     "build": "yarn build:core",
     "clean.builds": "gts clean",
