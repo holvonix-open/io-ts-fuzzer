@@ -33,7 +33,7 @@ function fuzz() {
 
 ## Types Supported
 
-Currently supports (and their recursive closure):
+Currently supports (and their nested closure):
 
 * `t.number`
 * `t.string`
