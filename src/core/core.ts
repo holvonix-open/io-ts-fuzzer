@@ -3,6 +3,7 @@ import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
 import { isLeft, isRight } from 'fp-ts/lib/Either';
 
 export type BasicType =
+  | t.AnyArrayType
   | t.ArrayType<t.Mixed>
   | t.BooleanType
   | t.ExactType<t.Mixed>
@@ -22,7 +23,6 @@ export type BasicType =
   | t.UnknownType
   | t.VoidType
   // not yet supported:
-  | t.AnyArrayType
   | t.AnyDictionaryType
   | t.DictionaryType<t.Mixed, t.Mixed>
   | t.RecursiveType<t.Mixed>
@@ -183,6 +183,16 @@ export function fuzzReadonly(
   };
 }
 
+function arrayFuzzFunc(maxLength: number) {
+  return (n: number, h0: t.Encoder<number, unknown>) => {
+    const ret = [];
+    for (let index = 0; index < n % maxLength; index++) {
+      ret.push(h0.encode(n + index));
+    }
+    return ret;
+  };
+}
+
 export const defaultMaxArrayLength = 13;
 
 const fuzzArrayWithMaxLength = (maxLength: number = defaultMaxArrayLength) => (
@@ -190,13 +200,7 @@ const fuzzArrayWithMaxLength = (maxLength: number = defaultMaxArrayLength) => (
 ): ConcreteFuzzer<unknown[]> => {
   return {
     children: [b.type],
-    func: (n, h0) => {
-      const ret = [];
-      for (let index = 0; index < n % maxLength; index++) {
-        ret.push(h0.encode(n + index));
-      }
-      return ret;
-    },
+    func: arrayFuzzFunc(maxLength),
   };
 };
 
@@ -226,6 +230,19 @@ const fuzzReadonlyArrayWithMaxLength = (maxLength: number) => (
 
 export function readonlyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
   return gen(fuzzReadonlyArrayWithMaxLength(maxLength), 'ReadonlyArrayType');
+}
+
+const fuzzAnyArrayWithMaxLength = (maxLength: number) => (
+  b: t.AnyArrayType
+): ConcreteFuzzer<unknown[]> => {
+  return {
+    children: [t.unknown],
+    func: arrayFuzzFunc(maxLength),
+  };
+};
+
+export function anyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
+  return gen(fuzzAnyArrayWithMaxLength(maxLength), 'AnyArrayType');
 }
 
 export const defaultExtraProps = { ___0000_extra_: t.number };
@@ -347,6 +364,7 @@ export const coreFuzzers = [
   interfaceFuzzer(),
   partialFuzzer(),
   arrayFuzzer(),
+  anyArrayFuzzer(),
   gen(fuzzExact, 'ExactType'),
   gen(fuzzReadonly, 'ReadonlyType'),
   readonlyArrayFuzzer(),
