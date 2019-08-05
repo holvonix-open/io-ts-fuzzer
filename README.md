@@ -50,6 +50,7 @@ Currently supports (and their nested closure):
 * `t.Int`
 * `t.literal`
 * `t.keyof`
+* `t.tuple`
 
 ## Use Cases
 

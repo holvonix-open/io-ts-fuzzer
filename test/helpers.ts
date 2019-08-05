@@ -26,6 +26,7 @@ export const types = [
     this: null,
     0.3: null,
   }),
+  t.tuple([t.number, t.string, t.boolean]),
   // Complex types
   t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({

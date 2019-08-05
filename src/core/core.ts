@@ -2,31 +2,30 @@ import * as t from 'io-ts';
 import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
 
 export type BasicType =
+  | t.NumberType
+  | t.BooleanType
+  | t.StringType
   | t.NullType
   | t.UndefinedType
   | t.VoidType
   | t.UnknownType
-  | t.StringType
-  | t.NumberType
-  | t.BooleanType
+  | t.UnionType<t.Mixed[]>
+  | t.InterfaceType<unknown>
+  | t.PartialType<unknown>
+  | t.ArrayType<t.Mixed>
+  | t.IntersectionType<t.Mixed[]>
+  | t.LiteralType<string | number | boolean>
+  | t.KeyofType<{ [key: string]: unknown }>
+  | t.TupleType<t.Mixed[]>
+  // not yet supported:
   | t.AnyArrayType
   | t.AnyDictionaryType
   | t.RefinementType<t.Mixed>
-  | t.LiteralType<string | number | boolean>
-  | t.KeyofType<{ [key: string]: unknown }>
   | t.RecursiveType<t.Mixed>
-  | t.ArrayType<t.Mixed>
-  | t.InterfaceType<unknown>
-  | t.PartialType<unknown>
   | t.DictionaryType<t.Mixed, t.Mixed>
-  | t.UnionType<t.Mixed[]>
-  | t.IntersectionType<t.Mixed[]>
-  | t.InterfaceType<unknown>
-  | t.TupleType<t.Mixed[]>
   | t.ReadonlyType<t.Mixed>
   | t.ReadonlyArrayType<t.Mixed>
-  | t.ExactType<t.Mixed>
-  | t.UnknownType;
+  | t.ExactType<t.Mixed>;
 
 export type basicFuzzGenerator<
   T,
@@ -162,6 +161,17 @@ export function fuzzInterface(
   };
 }
 
+export function fuzzTuple(
+  b: t.TupleType<t.Mixed[]>
+): ConcreteFuzzer<unknown[]> {
+  return {
+    children: b.types,
+    func: (n, ...h) => {
+      return h.map((v, i) => v.encode(n + i));
+    },
+  };
+}
+
 export const defaultMaxArrayLength = 13;
 
 const fuzzArrayWithMaxLength = (maxLength: number = defaultMaxArrayLength) => (
@@ -228,7 +238,6 @@ export function fuzzIntersection(
 
 export const coreFuzzers = [
   concrete(fuzzNumber, 'NumberType'),
-  concreteNamed(fuzzInt, 'Int'),
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
   concrete(fuzzNull, 'NullType'),
@@ -242,4 +251,6 @@ export const coreFuzzers = [
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),
   gen(fuzzKeyof, 'KeyofType'),
+  gen(fuzzTuple, 'TupleType'),
+  concreteNamed(fuzzInt, 'Int'),
 ];
