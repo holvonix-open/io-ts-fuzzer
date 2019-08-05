@@ -35,24 +35,25 @@ function fuzz() {
 
 Currently supports (and their nested closure):
 
-* `t.number`
-* `t.string`
-* `t.boolean`
-* `t.union`
-* `t.type` (interface)
-* `t.partial`
-* `t.intersection`
 * `t.array`
-* `t.null`
-* `t.undefined`
-* `t.void`
-* `t.unknown`
-* `t.Int`
-* `t.literal`
-* `t.keyof`
-* `t.tuple`
+* `t.boolean`
 * `t.exact`
+* `t.Int`
+* `t.intersection`
+* `t.keyof`
+* `t.literal`
+* `t.null`
+* `t.number`
+* `t.partial`
 * `t.readonly`
+* `t.readonlyArray`
+* `t.string`
+* `t.tuple`
+* `t.type` (interface)
+* `t.undefined`
+* `t.union`
+* `t.unknown`
+* `t.void`
 
 ## Use Cases
 
