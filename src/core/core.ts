@@ -115,6 +115,16 @@ export function fuzzUnknown(n: number): unknown {
   return n;
 }
 
+export function fuzzLiteral(
+  b: t.LiteralType<string | number | boolean>
+): ConcreteFuzzer<unknown> {
+  return {
+    func: n => {
+      return b.value;
+    },
+  };
+}
+
 export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
   return {
     children: b.types,
@@ -206,4 +216,5 @@ export const coreFuzzers = [
   gen(fuzzPartial, 'PartialType'),
   gen(fuzzArray, 'ArrayType'),
   gen(fuzzIntersection, 'IntersectionType'),
+  gen(fuzzLiteral, 'LiteralType'),
 ];
