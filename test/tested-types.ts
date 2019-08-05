@@ -144,10 +144,34 @@ const weirdString = t.brand(
   'WeirdString'
 );
 
-export const unknownTypes = [
+export const unknownTypes: Array<t.Decoder<unknown, unknown>> = [
   weirdString,
   t.union([t.string, weirdString]),
   customStringDecoder,
+
+  // TODO - implement these:
+  t.UnknownRecord,
+  t.record(t.string, t.number),
+  t.record(t.number, t.number),
+  t.record(t.boolean, t.number),
+  t.record(
+    t.string,
+    t.union([
+      t.readonly(
+        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+      ),
+      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
+    ])
+  ),
+  t.record(
+    t.string,
+    t.union([
+      t.readonly(
+        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+      ),
+      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
+    ])
+  ),
 ];
 
 export const runtimeFailTypes = [
