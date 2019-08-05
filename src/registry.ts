@@ -5,6 +5,7 @@ import {
   partialFuzzer,
   interfaceFuzzer,
   readonlyArrayFuzzer,
+  anyArrayFuzzer,
 } from './core/core';
 
 export interface Registry {
@@ -18,6 +19,7 @@ export interface Registry {
 
 export interface FluentRegistry extends Registry {
   withArrayFuzzer(maxLength?: number): FluentRegistry;
+  withAnyArrayFuzzer(maxLength?: number): FluentRegistry;
   withReadonlyArrayFuzzer(maxLength?: number): FluentRegistry;
   withPartialFuzzer(extra?: t.Props): FluentRegistry;
   withInterfaceFuzzer(extra?: t.Props): FluentRegistry;
@@ -45,6 +47,11 @@ class FluentifiedRegistry implements FluentRegistry {
 
   withArrayFuzzer(maxLength?: number): FluentRegistry {
     this.register(arrayFuzzer(maxLength));
+    return this;
+  }
+
+  withAnyArrayFuzzer(maxLength?: number): FluentRegistry {
+    this.register(anyArrayFuzzer(maxLength));
     return this;
   }
 

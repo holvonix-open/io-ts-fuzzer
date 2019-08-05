@@ -21,6 +21,7 @@ export const types = [
   t.unknown,
   t.array(t.string),
   t.readonlyArray(t.string),
+  t.UnknownArray,
   t.array(t.partial({ s: t.string, m: t.number })),
   t.readonlyArray(t.partial({ s: t.string, m: t.number })),
   t.Int,

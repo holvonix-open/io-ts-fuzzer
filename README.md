@@ -53,6 +53,7 @@ Currently supports (and their nested closure):
 * `t.undefined`
 * `t.union`
 * `t.unknown`
+* `t.UnknownArray`
 * `t.void`
 
 ## Use Cases
