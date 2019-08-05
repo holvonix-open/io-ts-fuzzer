@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.7.0...v1.8.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* support tuple type ([1a433d1](https://github.com/holvonix-open/io-ts-fuzzer/commit/1a433d1))
+
 # [1.7.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.6.0...v1.7.0) (2019-08-05)
 
 
