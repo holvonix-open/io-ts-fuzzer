@@ -1,1 +1,1 @@
-export { coreFuzzers } from './core';
+export { coreFuzzers, arrayFuzzer } from './core';
