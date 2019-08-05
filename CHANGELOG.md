@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.2...v1.4.3) (2019-08-05)
+
+
+### 🐛 Bug Fixes
+
+* don't run tests on end-users machines ([4432f34](https://github.com/holvonix-open/io-ts-fuzzer/commit/4432f34))
+
 ## [1.4.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.1...v1.4.2) (2019-08-04)
 
 
