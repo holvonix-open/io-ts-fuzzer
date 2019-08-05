@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.0...v1.10.1) (2019-08-05)
+
+
+### 📖 Documentation
+
+* fix readme quick start bug ([1496897](https://github.com/holvonix-open/io-ts-fuzzer/commit/1496897))
+
 # [1.10.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.9.0...v1.10.0) (2019-08-05)
 
 
