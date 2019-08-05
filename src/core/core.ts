@@ -155,25 +155,38 @@ export function fuzzInterface(
     func: (n, ...h) => {
       const ret = Object.create(null);
       h.forEach((v, i) => {
-        ret[keys[i]] = v.encode(n);
+        ret[keys[i]] = v.encode(n + i);
       });
       return ret;
     },
   };
 }
 
-export function fuzzArray(b: t.ArrayType<t.Mixed>): ConcreteFuzzer<unknown[]> {
+export const defaultMaxArrayLength = 13;
+
+const fuzzArrayWithMaxLength = (maxLength: number = defaultMaxArrayLength) => (
+  b: t.ArrayType<t.Mixed>
+): ConcreteFuzzer<unknown[]> => {
   return {
     children: [b.type],
     func: (n, h0) => {
       const ret = [];
-      for (let index = 0; index < n % 13; index++) {
+      for (let index = 0; index < n % maxLength; index++) {
         ret.push(h0.encode(n + index));
       }
       return ret;
     },
   };
+};
+
+export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
+  return gen(fuzzArrayWithMaxLength(maxLength), 'ArrayType');
 }
+
+/**
+ * @deprecated
+ */
+export const fuzzArray = fuzzArrayWithMaxLength();
 
 export function fuzzPartial(
   b: t.PartialType<t.Props>
@@ -186,7 +199,7 @@ export function fuzzPartial(
       const ret = Object.create(null);
       h.forEach((v, i) => {
         if (n & (2 ** i)) {
-          ret[keys[i]] = v.encode(n);
+          ret[keys[i]] = v.encode(n + i);
         }
       });
       return ret;
@@ -203,9 +216,9 @@ export function fuzzIntersection(
       let ret: unknown = undefined;
       h.forEach((v, i) => {
         if (ret === undefined) {
-          ret = v.encode(n);
+          ret = v.encode(n + i);
         } else {
-          ret = { ...ret, ...v.encode(n) };
+          ret = { ...ret, ...v.encode(n + i) };
         }
       });
       return ret;
@@ -225,7 +238,7 @@ export const coreFuzzers = [
   gen(fuzzUnion, 'UnionType'),
   gen(fuzzInterface, 'InterfaceType'),
   gen(fuzzPartial, 'PartialType'),
-  gen(fuzzArray, 'ArrayType'),
+  arrayFuzzer(),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),
   gen(fuzzKeyof, 'KeyofType'),

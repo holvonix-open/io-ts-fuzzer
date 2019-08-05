@@ -1,6 +1,6 @@
 import { Fuzzer, ExampleGenerator, exampleGenerator } from './fuzzer';
 import * as t from 'io-ts';
-import { coreFuzzers } from './core/';
+import { coreFuzzers, arrayFuzzer } from './core/';
 
 export interface Registry {
   register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
@@ -9,6 +9,40 @@ export interface Registry {
   exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T>;
 
   getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null;
+}
+
+export interface FluentRegistry extends Registry {
+  withArrayFuzzer(maxLength: number): FluentRegistry;
+}
+
+class FluentifiedRegistry implements FluentRegistry {
+  private readonly pimpl: Registry;
+  constructor(pimpl: Registry) {
+    this.pimpl = pimpl;
+  }
+
+  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
+  register(...vv: Fuzzer[]): FluentRegistry {
+    this.pimpl.register(...vv);
+    return this;
+  }
+
+  exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T> {
+    return this.pimpl.exampleGenerator(d);
+  }
+
+  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null {
+    return this.pimpl.getFuzzer(a);
+  }
+
+  withArrayFuzzer(maxLength: number): FluentRegistry {
+    this.register(arrayFuzzer(maxLength));
+    return this;
+  }
+}
+
+export function fluent(r: Registry): FluentRegistry {
+  return new FluentifiedRegistry(r);
 }
 
 type Key = string;
@@ -41,7 +75,6 @@ class RegistryC implements Registry {
     ) => ExampleGenerator<T>;
   }
 
-  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
   register(...vv: Fuzzer[]) {
     for (const v of vv) {
       this.fuzzers.set(fuzzerKey(v), v);

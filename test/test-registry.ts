@@ -127,4 +127,62 @@ describe('registry', () => {
       }
     });
   });
+
+  describe('#fluent', () => {
+    describe('#getFuzzer', () => {
+      describe('on the core registry', () => {
+        for (const b of types) {
+          it(`has a fuzzer for \`${b.name}\` type`, () => {
+            const r = lib.fluent(lib.createCoreRegistry()).getFuzzer(b);
+            assert.ok(r);
+            const x = r!;
+            assert.ok(x.idType === 'tag' || x.idType === 'name');
+            if (x.idType === 'name') {
+              assert.deepStrictEqual(x.id, b.name);
+            } else {
+              assert.deepStrictEqual(x.id, b._tag);
+            }
+          });
+        }
+      });
+
+      describe('#exampleGenerator', () => {
+        describe('on the core registry', () => {
+          for (const b of types) {
+            it(`can create an example generator for \`${b.name}\` type`, () => {
+              const r = lib
+                .fluent(lib.createCoreRegistry())
+                .exampleGenerator(b);
+              assert.ok(r);
+            });
+          }
+        });
+      });
+
+      describe('#withArrayFuzzer', () => {
+        describe('on the core registry', () => {
+          const b = t.array(t.number);
+          it(`overrides the array fuzzer max length`, () => {
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withArrayFuzzer(3)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(r.encode(i).length <= 3);
+            }
+          });
+
+          it(`overrides the array fuzzer max length on the underlying registry`, () => {
+            const r0 = lib.createCoreRegistry();
+            lib.fluent(r0).withArrayFuzzer(3);
+            const r = r0.exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(r.encode(i).length <= 3);
+            }
+          });
+        });
+      });
+    });
+  });
 });
