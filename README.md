@@ -49,6 +49,7 @@ Currently supports:
 * `t.unknown`
 * `t.Int`
 * `t.literal`
+* `t.keyof`
 
 ## Use Cases
 

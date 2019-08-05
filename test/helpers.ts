@@ -21,6 +21,11 @@ export const types = [
   t.literal(''),
   t.literal(0),
   t.literal(false),
+  t.keyof({
+    _: null,
+    this: null,
+    0.3: null,
+  }),
   // Complex types
   t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({

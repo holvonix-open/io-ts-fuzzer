@@ -134,6 +134,17 @@ export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
   };
 }
 
+export function fuzzKeyof(
+  b: t.KeyofType<{ [key: string]: unknown }>
+): ConcreteFuzzer<unknown> {
+  return {
+    func: n => {
+      const h = Object.getOwnPropertyNames(b.keys);
+      return h[n % h.length];
+    },
+  };
+}
+
 export function fuzzInterface(
   b: t.InterfaceType<t.Props>
 ): ConcreteFuzzer<unknown> {
@@ -217,4 +228,5 @@ export const coreFuzzers = [
   gen(fuzzArray, 'ArrayType'),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),
+  gen(fuzzKeyof, 'KeyofType'),
 ];
