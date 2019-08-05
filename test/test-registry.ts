@@ -159,6 +159,35 @@ describe('registry', () => {
         });
       });
 
+      describe('#withUnknownFuzzer', () => {
+        describe('on the core registry', () => {
+          it(`overrides the unknown fuzzer`, () => {
+            const b = t.unknown;
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withUnknownFuzzer(t.string)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.deepStrictEqual(typeof r.encode(i), 'string');
+            }
+          });
+
+          it(`overrides the underlying items in an UnknownArray`, () => {
+            const b = t.UnknownArray;
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withUnknownFuzzer(t.string)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              const e = r.encode(i);
+              e.forEach(x => assert.deepStrictEqual(typeof x, 'string'));
+            }
+          });
+        });
+      });
+
       describe('#withArrayFuzzer', () => {
         describe('on the core registry', () => {
           it(`overrides the array fuzzer max length`, () => {

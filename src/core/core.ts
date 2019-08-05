@@ -111,9 +111,28 @@ export function fuzzUndefined(): undefined {
 
 export function fuzzVoid(): void {}
 
-export function fuzzUnknown(n: number): unknown {
-  return n;
+export const defaultUnknownType = t.type({ __default_any_0: t.number });
+
+const fuzzUnknownWithType = (codec: t.Decoder<unknown, unknown>) => (
+  b: t.UnknownType
+): ConcreteFuzzer<unknown> => {
+  return {
+    children: [codec],
+    func: (n, h0) => h0.encode(n),
+  };
+};
+
+export function unknownFuzzer(
+  codec: t.Decoder<unknown, unknown> = defaultUnknownType
+) {
+  return gen(fuzzUnknownWithType(codec), 'UnknownType');
 }
+
+/**
+ * @deprecated
+ */
+export const fuzzUnknown = (n: number) =>
+  fuzzUnknownWithType(t.number)(t.unknown).func(n, t.number);
 
 export function fuzzLiteral(
   b: t.LiteralType<string | number | boolean>
@@ -360,7 +379,7 @@ export const coreFuzzers = [
   concrete(fuzzNull, 'NullType'),
   concrete(fuzzUndefined, 'UndefinedType'),
   concrete(fuzzVoid, 'VoidType'),
-  concrete(fuzzUnknown, 'UnknownType'),
+  unknownFuzzer(),
   interfaceFuzzer(),
   partialFuzzer(),
   arrayFuzzer(),

@@ -70,8 +70,9 @@ an identical example.  No exceptions should be thrown.
 The `FluentRegistry` interface lets you easily change certain core
 fuzzers, currently:
 
-* maximum array length
+* maximum array length (`array`, `readonlyArray`, `UnknownArray`)
 * extra properties inserted into `partial` and `type` (interface) objects
+* type used to fuzz `unknown` types
 
 ### Fuzzing a Type (TODO)
 
