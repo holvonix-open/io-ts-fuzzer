@@ -12,23 +12,21 @@ After `yarn add io-ts io-ts-fuzzer`...
 import * as t from 'io-ts';
 import * as fuzz from 'io-ts-fuzzer';
 
-function fuzz() {
-  // Fuzzers for common types
-  const r = fuzz.createCoreRegistry();
+// Fuzzers for common types
+const r = fuzz.createCoreRegistry();
 
-  // Type to fuzz
-  const target = t.union([t.string, t.type({n:t.number, b:t.boolean})]);
+// Type to fuzz
+const target = t.union([t.string, t.type({n:t.number, b:t.boolean})]);
 
-  // Builds a particular fuzzer from the registry.
-  const fuzzer = fuzz.exampleGenerator(r, target);
+// Builds a particular fuzzer from the registry.
+const fuzzer = fuzz.exampleGenerator(r, target);
 
-  // Make examples. The input number fully determines
-  // the output example.
-  console.log(fuzzer.encode(0));
-  console.log(fuzzer.encode(1));
-  console.log(fuzzer.encode(2));
-  console.log(fuzzer.encode(493));
-}
+// Make examples. The input number fully determines
+// the output example.
+console.log(fuzzer.encode(0));
+console.log(fuzzer.encode(1));
+console.log(fuzzer.encode(2));
+console.log(fuzzer.encode(493));
 ````
 
 ## Types Supported
