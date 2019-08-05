@@ -167,7 +167,7 @@ export function fuzzArray(b: t.ArrayType<t.Mixed>): ConcreteFuzzer<unknown[]> {
     children: [b.type],
     func: (n, h0) => {
       const ret = [];
-      for (let index = 0; index < n % 103; index++) {
+      for (let index = 0; index < n % 13; index++) {
         ret.push(h0.encode(n + index));
       }
       return ret;
