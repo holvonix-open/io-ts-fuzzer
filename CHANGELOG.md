@@ -1,3 +1,15 @@
+# [1.7.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.6.0...v1.7.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* allow customizable max length of array fuzzing ([89a3590](https://github.com/holvonix-open/io-ts-fuzzer/commit/89a3590))
+
+
+### 🐛 Bug Fixes
+
+* use small max array length to avoid DoS ([c8ed240](https://github.com/holvonix-open/io-ts-fuzzer/commit/c8ed240))
+
 # [1.6.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.5.0...v1.6.0) (2019-08-05)
 
 
