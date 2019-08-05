@@ -61,6 +61,14 @@ build a `t.Encoder<number,A>` that will give example instances of `A`.
 The example instances should all pass on `d.decode`, which should return
 an identical example.  No exceptions should be thrown.
 
+### Configuring Core Fuzzers
+
+The `FluentRegistry` interface lets you easily change certain core
+fuzzers, currently:
+
+* maximum array length
+* extra properties inserted into `partial` objects
+
 ### Fuzzing a Type (TODO)
 
 

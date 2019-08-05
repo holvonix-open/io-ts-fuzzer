@@ -1,6 +1,7 @@
 import { Fuzzer, ExampleGenerator, exampleGenerator } from './fuzzer';
 import * as t from 'io-ts';
 import { coreFuzzers, arrayFuzzer } from './core/';
+import { partialFuzzer } from './core/core';
 
 export interface Registry {
   register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
@@ -12,7 +13,8 @@ export interface Registry {
 }
 
 export interface FluentRegistry extends Registry {
-  withArrayFuzzer(maxLength: number): FluentRegistry;
+  withArrayFuzzer(maxLength?: number): FluentRegistry;
+  withPartialFuzzer(extra?: t.Props): FluentRegistry;
 }
 
 class FluentifiedRegistry implements FluentRegistry {
@@ -35,8 +37,13 @@ class FluentifiedRegistry implements FluentRegistry {
     return this.pimpl.getFuzzer(a);
   }
 
-  withArrayFuzzer(maxLength: number): FluentRegistry {
+  withArrayFuzzer(maxLength?: number): FluentRegistry {
     this.register(arrayFuzzer(maxLength));
+    return this;
+  }
+
+  withPartialFuzzer(extra?: t.Props): FluentRegistry {
+    this.register(partialFuzzer(extra));
     return this;
   }
 }

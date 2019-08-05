@@ -198,24 +198,43 @@ export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
  */
 export const fuzzArray = fuzzArrayWithMaxLength();
 
-export function fuzzPartial(
-  b: t.PartialType<t.Props>
-): ConcreteFuzzer<unknown> {
-  const keys = Object.getOwnPropertyNames(b.props);
-  const vals = keys.map(k => b.props[k]);
+const fuzzPartialWithExtraCodec = (
+  extra: t.Props = { ___0000_extra_: t.number }
+) => (b: t.PartialType<t.Props>): ConcreteFuzzer<unknown> => {
+  const kk = Object.getOwnPropertyNames(b.props);
+  const xx = Object.getOwnPropertyNames(extra);
+  const keys = Object.getOwnPropertyNames(b.props).concat(
+    Object.getOwnPropertyNames(extra)
+  );
+  const vals = keys.map((k, i) =>
+    i < kk.length ? b.props[k] : extra[xx[i - kk.length]]
+  );
   return {
     children: vals,
     func: (n, ...h) => {
       const ret = Object.create(null);
       h.forEach((v, i) => {
         if (n & (2 ** i)) {
-          ret[keys[i]] = v.encode(n + i);
+          // Only allow key indices from the original type
+          // or added keys without indices.
+          if (i < kk.length || !kk.includes(keys[i])) {
+            ret[keys[i]] = v.encode(n + i);
+          }
         }
       });
       return ret;
     },
   };
+};
+
+export function partialFuzzer(extra: t.Props = { ___0000_extra_: t.number }) {
+  return gen(fuzzPartialWithExtraCodec(extra), 'PartialType');
 }
+
+/**
+ * @deprecated
+ */
+export const fuzzPartial = fuzzPartialWithExtraCodec();
 
 export function fuzzIntersection(
   b: t.IntersectionType<t.Any[]>
@@ -246,7 +265,7 @@ export const coreFuzzers = [
   concrete(fuzzUnknown, 'UnknownType'),
   gen(fuzzUnion, 'UnionType'),
   gen(fuzzInterface, 'InterfaceType'),
-  gen(fuzzPartial, 'PartialType'),
+  partialFuzzer(),
   arrayFuzzer(),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),

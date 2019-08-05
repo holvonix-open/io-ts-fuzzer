@@ -161,8 +161,8 @@ describe('registry', () => {
 
       describe('#withArrayFuzzer', () => {
         describe('on the core registry', () => {
-          const b = t.array(t.number);
           it(`overrides the array fuzzer max length`, () => {
+            const b = t.array(t.number);
             const r0 = lib.createCoreRegistry();
             const r = lib
               .fluent(r0)
@@ -173,7 +173,24 @@ describe('registry', () => {
             }
           });
 
-          it(`overrides the array fuzzer max length on the underlying registry`, () => {
+          it(`overrides the partial object extra properties`, () => {
+            const b = t.partial({ a: t.number });
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withPartialFuzzer({ b: t.string })
+              .exampleGenerator(b);
+            const keys = new Set<string>();
+            for (let i = 0; i < 10; i++) {
+              Object.keys(r.encode(i)).map(x => keys.add(x));
+            }
+            assert.deepStrictEqual(keys.size, 2);
+            assert.ok(keys.has('a'));
+            assert.ok(keys.has('b'));
+          });
+
+          it(`overrides apply to the underlying registry`, () => {
+            const b = t.array(t.number);
             const r0 = lib.createCoreRegistry();
             lib.fluent(r0).withArrayFuzzer(3);
             const r = r0.exampleGenerator(b);

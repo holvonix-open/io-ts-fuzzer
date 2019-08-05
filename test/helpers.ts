@@ -8,7 +8,7 @@ export const types = [
   t.union([t.string, t.number, t.boolean]),
   t.intersection([t.type({ s: t.string }), t.type({ m: t.number })]),
   t.type({ s: t.string, m: t.number }),
-  t.partial({ s: t.string, m: t.number }),
+  t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
   t.null,
   t.undefined,
   t.void,
