@@ -67,7 +67,7 @@ The `FluentRegistry` interface lets you easily change certain core
 fuzzers, currently:
 
 * maximum array length
-* extra properties inserted into `partial` objects
+* extra properties inserted into `partial` and `type` (interface) objects
 
 ### Fuzzing a Type (TODO)
 
