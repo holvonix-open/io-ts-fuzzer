@@ -1,5 +1,6 @@
 import * as t from 'io-ts';
 import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
+import { isLeft } from 'fp-ts/lib/Either';
 
 export type BasicType =
   | t.NumberType
@@ -266,14 +267,23 @@ export function fuzzIntersection(
   return {
     children: b.types,
     func: (n, ...h) => {
+      let d = 0;
       let ret: unknown = undefined;
-      h.forEach((v, i) => {
-        if (ret === undefined) {
-          ret = v.encode(n + i);
-        } else {
-          ret = { ...ret, ...v.encode(n + i) };
-        }
-      });
+      do {
+        h.forEach((v, i) => {
+          let lp: unknown;
+          lp = v.encode(n + i + d);
+          if (typeof lp !== 'object') {
+            throw new Error('fuzzIntersection cannot support non-object types');
+          }
+          if (ret === undefined) {
+            ret = lp;
+          } else {
+            ret = { ...ret, ...lp };
+          }
+        });
+        d++;
+      } while (h.findIndex((_, i) => isLeft(b.types[i].decode(ret))) > -1);
       return ret;
     },
   };
