@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.3...v1.5.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* support literals ([b7c6467](https://github.com/holvonix-open/io-ts-fuzzer/commit/b7c6467))
+
 ## [1.4.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.4.2...v1.4.3) (2019-08-05)
 
 
