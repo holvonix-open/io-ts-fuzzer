@@ -173,6 +173,20 @@ describe('registry', () => {
             }
           });
 
+          it(`does not affect readonly arrays`, () => {
+            const b = t.readonlyArray(t.number);
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withArrayFuzzer(3)
+              .exampleGenerator(b);
+            let ml = 0;
+            for (let i = 0; i < 100; i++) {
+              ml = Math.max(r.encode(i).length, ml);
+            }
+            assert.ok(ml > 3);
+          });
+
           it(`overrides apply to the underlying registry`, () => {
             const b = t.array(t.number);
             const r0 = lib.createCoreRegistry();
@@ -181,6 +195,36 @@ describe('registry', () => {
             for (let i = 0; i < 100; i++) {
               assert.ok(r.encode(i).length <= 3);
             }
+          });
+        });
+      });
+
+      describe('#withReadonlyArrayFuzzer', () => {
+        describe('on the core registry', () => {
+          it(`overrides the array fuzzer max length`, () => {
+            const b = t.readonlyArray(t.number);
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withReadonlyArrayFuzzer(3)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(r.encode(i).length <= 3);
+            }
+          });
+
+          it(`does not affect non-readonly arrays`, () => {
+            const b = t.array(t.number);
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withReadonlyArrayFuzzer(3)
+              .exampleGenerator(b);
+            let ml = 0;
+            for (let i = 0; i < 100; i++) {
+              ml = Math.max(r.encode(i).length, ml);
+            }
+            assert.ok(ml > 3);
           });
         });
       });

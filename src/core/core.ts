@@ -3,30 +3,30 @@ import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
 import { isLeft, isRight } from 'fp-ts/lib/Either';
 
 export type BasicType =
-  | t.NumberType
-  | t.BooleanType
-  | t.StringType
-  | t.NullType
-  | t.UndefinedType
-  | t.VoidType
-  | t.UnknownType
-  | t.UnionType<t.Mixed[]>
-  | t.InterfaceType<unknown>
-  | t.PartialType<unknown>
   | t.ArrayType<t.Mixed>
-  | t.IntersectionType<t.Mixed[]>
-  | t.LiteralType<string | number | boolean>
-  | t.KeyofType<{ [key: string]: unknown }>
-  | t.TupleType<t.Mixed[]>
+  | t.BooleanType
   | t.ExactType<t.Mixed>
+  | t.InterfaceType<unknown>
+  | t.IntersectionType<t.Mixed[]>
+  | t.KeyofType<{ [key: string]: unknown }>
+  | t.LiteralType<string | number | boolean>
+  | t.NullType
+  | t.NumberType
+  | t.PartialType<unknown>
+  | t.ReadonlyArrayType<t.Mixed>
   | t.ReadonlyType<t.Mixed>
+  | t.StringType
+  | t.TupleType<t.Mixed[]>
+  | t.UndefinedType
+  | t.UnionType<t.Mixed[]>
+  | t.UnknownType
+  | t.VoidType
   // not yet supported:
   | t.AnyArrayType
   | t.AnyDictionaryType
-  | t.RefinementType<t.Mixed>
-  | t.RecursiveType<t.Mixed>
   | t.DictionaryType<t.Mixed, t.Mixed>
-  | t.ReadonlyArrayType<t.Mixed>;
+  | t.RecursiveType<t.Mixed>
+  | t.RefinementType<t.Mixed>;
 
 export type basicFuzzGenerator<
   T,
@@ -209,6 +209,25 @@ export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
  */
 export const fuzzArray = fuzzArrayWithMaxLength();
 
+const fuzzReadonlyArrayWithMaxLength = (maxLength: number) => (
+  b: t.ReadonlyArrayType<t.Mixed>
+): ConcreteFuzzer<unknown[]> => {
+  return {
+    children: [b.type],
+    func: (n, h0) => {
+      const ret = [];
+      for (let index = 0; index < n % maxLength; index++) {
+        ret.push(Object.freeze(h0.encode(n + index)));
+      }
+      return ret;
+    },
+  };
+};
+
+export function readonlyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
+  return gen(fuzzReadonlyArrayWithMaxLength(maxLength), 'ReadonlyArrayType');
+}
+
 export const defaultExtraProps = { ___0000_extra_: t.number };
 
 const fuzzPartialWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
@@ -330,6 +349,7 @@ export const coreFuzzers = [
   arrayFuzzer(),
   gen(fuzzExact, 'ExactType'),
   gen(fuzzReadonly, 'ReadonlyType'),
+  readonlyArrayFuzzer(),
   gen(fuzzUnion, 'UnionType'),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),
