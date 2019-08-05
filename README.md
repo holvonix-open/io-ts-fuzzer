@@ -52,6 +52,7 @@ Currently supports (and their nested closure):
 * `t.keyof`
 * `t.tuple`
 * `t.exact`
+* `t.readonly`
 
 ## Use Cases
 

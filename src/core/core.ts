@@ -19,13 +19,13 @@ export type BasicType =
   | t.KeyofType<{ [key: string]: unknown }>
   | t.TupleType<t.Mixed[]>
   | t.ExactType<t.Mixed>
+  | t.ReadonlyType<t.Mixed>
   // not yet supported:
   | t.AnyArrayType
   | t.AnyDictionaryType
   | t.RefinementType<t.Mixed>
   | t.RecursiveType<t.Mixed>
   | t.DictionaryType<t.Mixed, t.Mixed>
-  | t.ReadonlyType<t.Mixed>
   | t.ReadonlyArrayType<t.Mixed>;
 
 export type basicFuzzGenerator<
@@ -167,6 +167,18 @@ export function fuzzExact(b: t.ExactC<t.HasProps>): ConcreteFuzzer<unknown> {
         throw new Error(`codec failed to decode underlying example`);
       }
       return d.right;
+    },
+  };
+}
+
+export function fuzzReadonly(
+  b: t.ReadonlyType<t.Any>
+): ConcreteFuzzer<unknown> {
+  return {
+    children: [b.type],
+    func: (n, h0) => {
+      const r = h0.encode(n);
+      return Object.freeze(r);
     },
   };
 }
@@ -317,6 +329,7 @@ export const coreFuzzers = [
   partialFuzzer(),
   arrayFuzzer(),
   gen(fuzzExact, 'ExactType'),
+  gen(fuzzReadonly, 'ReadonlyType'),
   gen(fuzzUnion, 'UnionType'),
   gen(fuzzIntersection, 'IntersectionType'),
   gen(fuzzLiteral, 'LiteralType'),

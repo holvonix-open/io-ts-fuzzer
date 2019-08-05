@@ -15,18 +15,6 @@ export const types = [
   t.exact(t.type({ s: t.string, m: t.number, ___0000_extra_: t.string })),
   t.exact(t.partial({ s: t.string, m: t.number })),
   t.exact(t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })),
-  t.exact(
-    t.intersection([
-      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
-      t.type({ s: t.string, j: t.boolean }),
-    ])
-  ),
-  t.exact(
-    t.intersection([
-      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
-      t.type({ s2: t.string, j: t.boolean }),
-    ])
-  ),
   t.null,
   t.undefined,
   t.void,
@@ -45,7 +33,42 @@ export const types = [
     0.3: null,
   }),
   t.tuple([t.number, t.string, t.boolean]),
+  t.readonly(t.string),
+  t.readonly(t.tuple([t.string, t.boolean])),
+  t.readonly(t.type({ s: t.string, j: t.boolean })),
   // Complex types
+  t.exact(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.type({ s: t.string, j: t.boolean }),
+    ])
+  ),
+  t.exact(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.type({ s2: t.string, j: t.boolean }),
+    ])
+  ),
+  t.readonly(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.type({ s: t.string, j: t.boolean }),
+    ])
+  ),
+  t.exact(
+    t.intersection([
+      t.readonly(
+        t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+      ),
+      t.type({ s2: t.string, j: t.boolean }),
+    ])
+  ),
+  t.exact(
+    t.intersection([
+      t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+      t.readonly(t.type({ s2: t.string, j: t.boolean })),
+    ])
+  ),
   t.intersection([
     t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
     t.type({ s: t.string, j: t.boolean }),
@@ -77,6 +100,22 @@ export const types = [
   t.union([
     t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
     t.partial({ s2: t.string, j: t.boolean }),
+  ]),
+  t.union([
+    t.readonly(
+      t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+    ),
+    t.readonly(t.partial({ s: t.string, j: t.boolean })),
+  ]),
+  t.union([
+    t.readonly(
+      t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+    ),
+    t.readonly(t.partial({ s2: t.string, j: t.boolean })),
+  ]),
+  t.union([
+    t.readonly(t.partial({ s: t.string, m: t.number })),
+    t.readonly(t.partial({ s2: t.string, j: t.boolean })),
   ]),
   t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({
