@@ -30,6 +30,38 @@ export const types = [
   }),
   t.tuple([t.number, t.string, t.boolean]),
   // Complex types
+  t.intersection([
+    t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.type({ s: t.string, j: t.boolean }),
+  ]),
+  t.intersection([
+    t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.type({ s2: t.string, j: t.boolean }),
+  ]),
+  t.union([
+    t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.type({ s: t.string, j: t.boolean }),
+  ]),
+  t.union([
+    t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.type({ s2: t.string, j: t.boolean }),
+  ]),
+  t.intersection([
+    t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.partial({ s: t.string, j: t.boolean }),
+  ]),
+  t.intersection([
+    t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.partial({ s2: t.string, j: t.boolean }),
+  ]),
+  t.union([
+    t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.partial({ s: t.string, j: t.boolean }),
+  ]),
+  t.union([
+    t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
+    t.partial({ s2: t.string, j: t.boolean }),
+  ]),
   t.type({ s: t.string, m: t.type({ n: t.Int }) }),
   t.type({
     s: t.union([t.string, t.number, t.partial({ n: t.number, z: t.string })]),
@@ -57,4 +89,9 @@ export const unknownTypes = [
   weirdString,
   t.union([t.string, weirdString]),
   customStringDecoder,
+];
+
+export const runtimeFailTypes = [
+  t.intersection([t.string, t.type({ m: t.number })]),
+  t.intersection([t.type({ m: t.number }), t.string]),
 ];
