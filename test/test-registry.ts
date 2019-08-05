@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as lib from '../src/registry';
 
-import { types, unknownTypes } from './helpers';
+import { types, unknownTypes } from './tested-types';
 import { Fuzzer } from '../src';
 import * as t from 'io-ts';
 

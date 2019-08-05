@@ -3,7 +3,7 @@ import * as lib from '../src/';
 
 import { exampleGenerator } from '../src/';
 import { isRight, Right } from 'fp-ts/lib/Either';
-import { types } from './helpers';
+import { types } from './tested-types';
 
 const count = 103;
 

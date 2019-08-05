@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as lib from '../src/fuzzer';
 
-import { types, unknownTypes, runtimeFailTypes } from './helpers';
+import { types, unknownTypes, runtimeFailTypes } from './tested-types';
 import { createCoreRegistry } from '../src/registry';
 import { isRight } from 'fp-ts/lib/Either';
 import { inspect } from 'util';
