@@ -1,3 +1,25 @@
+# [1.10.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.9.0...v1.10.0) (2019-08-05)
+
+
+### 🌟🚀 Features
+
+* support configuring `unknown` type fuzzing ([8d15e73](https://github.com/holvonix-open/io-ts-fuzzer/commit/8d15e73))
+* support configuring extra properties for interface fuzzers ([6a9dab1](https://github.com/holvonix-open/io-ts-fuzzer/commit/6a9dab1))
+* support exact types ([883ec4b](https://github.com/holvonix-open/io-ts-fuzzer/commit/883ec4b))
+* support readonly types ([03fbecf](https://github.com/holvonix-open/io-ts-fuzzer/commit/03fbecf))
+* support readonlyArray types ([279ab9e](https://github.com/holvonix-open/io-ts-fuzzer/commit/279ab9e))
+* support UnknownArray ([0ff9aa7](https://github.com/holvonix-open/io-ts-fuzzer/commit/0ff9aa7))
+
+
+### 🐛 Bug Fixes
+
+* intersection fuzzer emits only examples consistent with each child type ([15ae0cd](https://github.com/holvonix-open/io-ts-fuzzer/commit/15ae0cd))
+
+
+### 💄 Polish
+
+* move tested codecs ([021263f](https://github.com/holvonix-open/io-ts-fuzzer/commit/021263f))
+
 # [1.9.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.8.0...v1.9.0) (2019-08-05)
 
 
