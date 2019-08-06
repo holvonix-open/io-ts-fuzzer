@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.1...v1.10.2) (2019-08-06)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** bump io-ts from 2.0.0 to 2.0.1 ([#8](https://github.com/holvonix-open/io-ts-fuzzer/issues/8)) ([b957951](https://github.com/holvonix-open/io-ts-fuzzer/commit/b957951))
+
 ## [1.10.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.0...v1.10.1) (2019-08-05)
 
 
