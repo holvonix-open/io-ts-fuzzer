@@ -6,7 +6,7 @@
 
 ## Quick Start
 
-After `yarn add io-ts io-ts-fuzzer`...
+After `yarn add fp-ts io-ts io-ts-fuzzer`...
 
 ````typescript
 import * as t from 'io-ts';
@@ -31,7 +31,7 @@ console.log(fuzzer.encode([493, fuzz.fuzzContext()]));
 
 ## Types Supported
 
-Currently supports (and their nested closure):
+Currently supports (along with their nested closure):
 
 * `t.array`
 * `t.boolean`
@@ -54,6 +54,10 @@ Currently supports (and their nested closure):
 * `t.unknown`
 * `t.UnknownArray`
 * `t.void`
+
+If you additionally do `yarn add monocle-ts io-ts-types` and register
+the `io-ts-types` extra fuzzers via `r.register(...await loadIoTsTypesFuzzers)`, the following additional types will be supported:
+* `date`
 
 ## Use Cases
 

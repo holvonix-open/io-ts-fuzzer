@@ -23,4 +23,7 @@ Third-party dependencies may have their own licenses.
 
 export * from './registry';
 export * from './fuzzer';
-export * from './core/';
+export * from './extras';
+
+import * as core from './core';
+export { core };

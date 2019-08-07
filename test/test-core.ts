@@ -1,7 +1,8 @@
 import { assert } from 'chai';
-import { fuzzUnion, unknownFuzzer } from '../src/core/core';
 import * as t from 'io-ts';
-import { fuzzContext, FuzzerUnit, Fuzzer } from '../src';
+
+import { fuzzUnion, unknownFuzzer } from '../src/core';
+import { fuzzContext, FuzzerUnit, Fuzzer } from '../src/fuzzer';
 
 // tslint:disable-next-line:variable-name
 const RecA: t.RecursiveType<t.UnionType<t.Mixed[]>> = t.recursion('RecA', () =>
@@ -55,7 +56,7 @@ const fuNonRecursiveObject: FuzzerUnit<object> = {
 
 describe('core', () => {
   describe('fuzzUnion', () => {
-    it('returns any subtype when shouldGoDeeper', () => {
+    it('returns any subtype when mayRecurse', () => {
       const c = fuzzUnion(RecA.type);
       const s = new Set<unknown>();
       for (const i of new Array(count).keys()) {
@@ -72,7 +73,7 @@ describe('core', () => {
       assert.sameMembers(Array.from(s), [10, '15', ro]);
     });
 
-    it('returns any subtype when !shouldGoDeeper and no recursive types', () => {
+    it('returns any subtype when !mayRecurse and no recursive types', () => {
       const c = fuzzUnion(RecA.type);
       const s = new Set<unknown>();
       for (const i of new Array(count).keys()) {
@@ -89,7 +90,7 @@ describe('core', () => {
       assert.sameMembers(Array.from(s), [10, '15', ro]);
     });
 
-    it('returns available non-recursive subtypes when !shouldGoDeeper', () => {
+    it('returns available non-recursive subtypes when !mayRecurse', () => {
       const c = fuzzUnion(RecA.type);
       const s = new Set<unknown>();
       for (const i of new Array(count).keys()) {
@@ -106,7 +107,7 @@ describe('core', () => {
       assert.sameMembers(Array.from(s), [10, '15']);
     });
 
-    it('returns any subtype when !shouldGoDeeper and no non-recursive subtypes', () => {
+    it('returns any subtype when !mayRecurse and no non-recursive subtypes', () => {
       const c = fuzzUnion(RecA.type);
       const s = new Set<unknown>();
       for (const i of new Array(count).keys()) {
@@ -136,7 +137,7 @@ describe('core', () => {
       const fuStringSpy: FuzzerUnit<string> = {
         mightRecurse: false,
         encode: ctx => {
-          childDeeper.add(ctx[1].shouldGoDeeper());
+          childDeeper.add(ctx[1].mayRecurse());
           return '15';
         },
       };
@@ -158,7 +159,7 @@ describe('core', () => {
       const fuStringSpy: FuzzerUnit<string> = {
         mightRecurse: false,
         encode: ctx => {
-          childDeeper.add(ctx[1].shouldGoDeeper());
+          childDeeper.add(ctx[1].mayRecurse());
           return '15';
         },
       };
@@ -169,7 +170,7 @@ describe('core', () => {
       assert.sameMembers(Array.from(childDeeper), [true]);
     });
 
-    it('returns default value when !shouldGoDeeper', () => {
+    it('returns default value when !mayRecurse', () => {
       const c0 = unknownFuzzer(t.string) as Fuzzer<unknown>;
       if (c0.impl.type !== 'generator') {
         throw new Error();

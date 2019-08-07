@@ -115,9 +115,15 @@
     "concurrently": "^4.1.1",
     "gts": "^1.1.0",
     "husky": "^3.0.2",
+    "io-ts-types": "^0.5.0",
     "mocha": "^6.2.0",
+    "monocle-ts": "^2.0.0",
     "nyc": "^14.1.1",
     "ts-mocha": "^6.0.0",
     "typescript": "~3.5.0"
+  },
+  "peerDependencies": {
+    "io-ts-types": "^0.5.0",
+    "monocle-ts": "^2.0.0"
   }
 }
