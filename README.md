@@ -1,6 +1,14 @@
 # io-ts-fuzzer - Fuzzing for io-ts codecs and types
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) [![npm](https://img.shields.io/npm/v/io-ts-fuzzer.svg)](https://www.npmjs.com/package/io-ts-fuzzer) [![Build Status](https://travis-ci.com/holvonix-open/io-ts-fuzzer.svg?branch=master)](https://travis-ci.com/holvonix-open/io-ts-fuzzer) [![GitHub last commit](https://img.shields.io/github/last-commit/holvonix-open/io-ts-fuzzer.svg)](https://github.com/holvonix-open/io-ts-fuzzer/commits) [![codecov](https://codecov.io/gh/holvonix-open/io-ts-fuzzer/branch/master/graph/badge.svg)](https://codecov.io/gh/holvonix-open/io-ts-fuzzer) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com) [![DeepScan grade](https://deepscan.io/api/teams/4465/projects/6653/branches/56883/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=4465&pid=6653&bid=56883) [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/io-ts-fuzzer.svg)](https://www.npmjs.com/package/io-ts-fuzzer)
+[![Build Status](https://travis-ci.com/holvonix-open/io-ts-fuzzer.svg?branch=master)](https://travis-ci.com/holvonix-open/io-ts-fuzzer)
+[![GitHub last commit](https://img.shields.io/github/last-commit/holvonix-open/io-ts-fuzzer.svg)](https://github.com/holvonix-open/io-ts-fuzzer/commits)
+[![codecov](https://codecov.io/gh/holvonix-open/io-ts-fuzzer/branch/master/graph/badge.svg)](https://codecov.io/gh/holvonix-open/io-ts-fuzzer)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com)
+[![DeepScan grade](https://deepscan.io/api/teams/4465/projects/6653/branches/56883/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=4465&pid=6653&bid=56883)
+[![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 `io-ts-fuzzer` lets you generate examples of a given `io-ts` type.
 
@@ -8,7 +16,7 @@
 
 After `yarn add fp-ts io-ts io-ts-fuzzer`...
 
-````typescript
+```typescript
 import * as t from 'io-ts';
 import * as fuzz from 'io-ts-fuzzer';
 
@@ -16,7 +24,7 @@ import * as fuzz from 'io-ts-fuzzer';
 const r = fuzz.createCoreRegistry();
 
 // Type to fuzz
-const target = t.union([t.string, t.type({n:t.number, b:t.boolean})]);
+const target = t.union([t.string, t.type({ n: t.number, b: t.boolean })]);
 
 // Builds a particular fuzzer from the registry.
 const fuzzer = fuzz.exampleGenerator(r, target);
@@ -27,80 +35,82 @@ console.log(fuzzer.encode([0, fuzz.fuzzContext()]));
 console.log(fuzzer.encode([1, fuzz.fuzzContext()]));
 console.log(fuzzer.encode([2, fuzz.fuzzContext()]));
 console.log(fuzzer.encode([493, fuzz.fuzzContext()]));
-````
+```
 
 ## Types Supported
 
 Currently supports (along with their nested closure):
 
-* `t.array`
-* `t.boolean`
-* `t.exact`
-* `t.Int`
-* `t.intersection`
-* `t.keyof`
-* `t.literal`
-* `t.null`
-* `t.number`
-* `t.partial`
-* `t.readonly`
-* `t.readonlyArray`
-* `t.recursive`
-* `t.string`
-* `t.tuple`
-* `t.type` (interface)
-* `t.undefined`
-* `t.union`
-* `t.unknown`
-* `t.UnknownArray`
-* `t.void`
+- `t.array`
+- `t.boolean`
+- `t.exact`
+- `t.Int`
+- `t.intersection`
+- `t.keyof`
+- `t.literal`
+- `t.null`
+- `t.number`
+- `t.partial`
+- `t.readonly`
+- `t.readonlyArray`
+- `t.recursive`
+- `t.string`
+- `t.tuple`
+- `t.type` (interface)
+- `t.undefined`
+- `t.union`
+- `t.unknown`
+- `t.UnknownArray`
+- `t.void`
 
-If you additionally do `yarn add monocle-ts io-ts-types` and register
-the `io-ts-types` extra fuzzers via `r.register(...await loadIoTsTypesFuzzers)`, the following additional types will be supported:
-* `date`
+If you additionally do `yarn add monocle-ts io-ts-types` and register the
+`io-ts-types` extra fuzzers via `r.register(...await loadIoTsTypesFuzzers)`, the
+following additional types will be supported:
 
-## Use Cases
+- `date`
 
-### Generating Conforming Examples and Verifying Decoder Behavior
+## How To
+
+### Generate Conforming Examples and Verifying Decoder Behavior
 
 Given a `d = t.Decoder<I,A>` (aka a `t.Type`), `fuzz.exampleGenerator` will
-build a `t.Encoder<[number,FuzzContext],A>` that will give example instances of `A`.
-The example instances should all pass on `d.decode`, which should return
-an identical example.  No exceptions should be thrown.
+build a `t.Encoder<[number,FuzzContext],A>` that will give example instances of
+`A`. The example instances should all pass on `d.decode`, which should return an
+identical example. No exceptions should be thrown.
 
-### Configuring Core Fuzzers
+### Configure Core Fuzzers
 
-The `FluentRegistry` interface lets you easily change certain core
-fuzzers, currently:
+The `FluentRegistry` interface lets you easily configure certain core fuzzers,
+currently:
 
-* maximum array length (`array`, `readonlyArray`, `UnknownArray`)
-* extra properties inserted into `partial` and `type` (interface) objects
-* type used to fuzz `unknown` types
+- maximum array length (`array`, `readonlyArray`, `UnknownArray`)
+- extra properties inserted into `partial` and `type` (interface) objects
+- type used to fuzz `unknown` types
 
-### Recursive Types
+### Fuzz Recursive Types
 
-When fuzzing recursive types, you can provide to the context
-a `maxRecursionHint` which specifies the requested maximum
-instantiations of any recursive type.  Note that this is the
-maximum depth of *recursive* types, not all types.  If the
-recursive depth has been reached, fuzzers that have a choice
-of which child(ren) to instantiate (like unions, partials,
-or arrays) will attempt to choose children that won't recurse.
+When fuzzing recursive types, you can provide to the context a
+`maxRecursionHint` which specifies the requested maximum instantiations of any
+recursive type in a single path. Note that this is the maximum depth of
+_recursive_ types, not all types. If the recursive depth has been reached,
+fuzzers that have a choice of which child(ren) to instantiate (like unions,
+partials, or arrays) will attempt to choose children that won't recurse.
 
-Note this is only a hint -- sometimes the type definition won't allow the fuzzer to choose such a non-recursive path
-(and you'll get a stack limit error when attempting to
-generate the actual example from the generator).
+Note this is only a hint -- sometimes the type definition won't allow the fuzzer
+to choose such a non-recursive path (and you'll get a stack limit error when
+attempting to generate the actual example from the generator).
 
-### Fuzzing a Type (TODO)
+### Generate Variations of a Type
 
+_TODO_
 
 ## License
 
 Read the [LICENSE](LICENSE) for details.  
-The entire [NOTICE](NOTICE) file serves as the NOTICE that must be included under
-Section 4d of the License.
+The entire [NOTICE](NOTICE) file serves as the NOTICE that must be included
+under Section 4d of the License.
 
-````
+```
 
 # io-ts-fuzzer
 
@@ -123,4 +133,4 @@ limitations under the License.
 
 Third-party dependencies may have their own licenses.
 
-````
+```

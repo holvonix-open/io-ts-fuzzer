@@ -1,15 +1,15 @@
 version: 1
 update_configs:
-  - package_manager: "javascript"
-    directory: "/"
-    update_schedule: "live"
+  - package_manager: 'javascript'
+    directory: '/'
+    update_schedule: 'live'
     default_reviewers:
-      - "holvonixAdvay"
+      - 'holvonixAdvay'
     default_assignees:
-      - "holvonixAdvay"
+      - 'holvonixAdvay'
     default_labels:
-      - "dependencies"
+      - 'dependencies'
     commit_message:
-      prefix: "fix"
-      prefix_development: "chore"
-      include_scope: true 
+      prefix: 'fix'
+      prefix_development: 'chore'
+      include_scope: true
