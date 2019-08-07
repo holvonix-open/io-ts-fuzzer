@@ -31,11 +31,12 @@ const fuzzer = fuzz.exampleGenerator(r, target);
 
 // Make examples. The input integer and context
 // fully determines the output example.
-console.log(fuzzer.encode([0, fuzz.fuzzContext()]));
-console.log(fuzzer.encode([1, fuzz.fuzzContext()]));
-console.log(fuzzer.encode([2, fuzz.fuzzContext()]));
-console.log(fuzzer.encode([493, fuzz.fuzzContext()]));
+for (const n of new Array(10).keys()) {
+  console.log(JSON.stringify(fuzzer.encode([n, fuzz.fuzzContext()])));
+}
 ```
+
+See [examples/quickstart/index.ts](examples/quickstart/index.ts).
 
 ## Types Supported
 
