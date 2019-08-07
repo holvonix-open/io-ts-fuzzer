@@ -27,7 +27,7 @@ describe('extra-fuzzers', () => {
           r.register(...fz);
           p = exampleGenerator(r, b).encode;
         });
-        it(`generates unique, decodable examples for inputs '[0, ${count})`, () => {
+        it(`generates decodable examples for inputs '[0, ${count})`, () => {
           for (const n of new Array(count).keys()) {
             const v = p([n, fuzzContext()]);
             const d = b.decode(v);

@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { assert } from 'chai';
 import * as lib from '../src/';
 
 import { exampleGenerator, fuzzContext } from '../src/';
@@ -18,7 +18,7 @@ describe('io-ts-fuzzer', () => {
           const r = lib.createCoreRegistry()!;
           p = exampleGenerator(r, b).encode;
         });
-        it(`generates unique, decodable examples for inputs '[0, ${count})`, () => {
+        it(`generates decodable examples for inputs '[0, ${count})`, () => {
           for (const n of new Array(count).keys()) {
             const v = p([n, fuzzContext()]);
             const d = b.decode(v);
