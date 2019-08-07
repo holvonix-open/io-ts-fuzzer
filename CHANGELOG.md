@@ -1,3 +1,31 @@
+## [3.0.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.0...v3.0.1) (2019-08-07)
+
+
+### 🐛 Bug Fixes
+
+* move fp-ts and io-ts to peer dependencies ([6a95707](https://github.com/holvonix-open/io-ts-fuzzer/commit/6a95707))
+
+
+### 💄 Polish
+
+* run non-typescript through prettier ([d95bf76](https://github.com/holvonix-open/io-ts-fuzzer/commit/d95bf76))
+
+
+### 📖 Documentation
+
+* add runnable quick start example ([34109f9](https://github.com/holvonix-open/io-ts-fuzzer/commit/34109f9))
+* fix up README typos ([518e880](https://github.com/holvonix-open/io-ts-fuzzer/commit/518e880))
+
+
+### 🔧 Build / Continuous Integration
+
+* use cd instead of pushd in build scripts ([96ad9e9](https://github.com/holvonix-open/io-ts-fuzzer/commit/96ad9e9))
+
+
+### 🔬 Tests
+
+* tests never test for uniqueness for examples ([a52f4c3](https://github.com/holvonix-open/io-ts-fuzzer/commit/a52f4c3))
+
 # [3.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v2.0.0...v3.0.0) (2019-08-07)
 
 
