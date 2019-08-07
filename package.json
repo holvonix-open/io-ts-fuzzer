@@ -22,12 +22,13 @@
   "files": [
     "build/src/**/*.js",
     "build/src/**/*.d.ts",
+    "CHANGELOG.md",
     "LICENSE",
     "NOTICE",
     "README.md"
   ],
   "author": "Holvonix LLC",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "Apache-2.0",
   "private": false,
   "scripts": {
     "t": "yarn test  --inspect --grep='#e2e|#int' --invert",
@@ -41,6 +42,8 @@
     "build:core": "tsc -p .",
     "build": "yarn build:core",
     "clean.builds": "gts clean",
+    "pretty.check": "prettier --check $npm_package_prettierGlob_include",
+    "pretty.fix": "prettier --write $npm_package_prettierGlob_include",
     "clean": "yarn clean.builds && yarn clean.tests",
     "clean.tests": "rm -rf *.lcov .nyc_output *.log coverage",
     "test:postinstall": "yarn clean && yarn build && yarn test-impl --grep='#e2e' --invert",
@@ -50,8 +53,8 @@
     "test-coverage": "yarn test && yarn report-coverage",
     "report-coverage": "nyc report --reporter=json && codecov -F unit -f coverage/*.json",
     "lint": "yarn fix && yarn run check",
-    "check": "gts check",
-    "fix": "gts fix",
+    "check": "yarn run pretty.check && gts check",
+    "fix": "yarn run pretty.fix && gts fix",
     "preversion": "yarn test",
     "docs": "yarn clean && yarn build && rm -rf docs && mkdir -p docs && ( mocha --grep='#private' --invert -R markdown >docs/index.md )",
     "test-unit": "yarn test --grep='#e2e|#int' --invert",
@@ -60,6 +63,9 @@
     "up": "yarn upgrade-interactive --latest",
     "yarn": "rm -rf yarn.lock node_modules/ && yarn",
     "semantic-release": "semantic-release"
+  },
+  "prettierGlob": {
+    "include": "**/*.yml **/*.yaml **/*.md **/*.json *.js !CHANGELOG.md"
   },
   "sideEffects": false,
   "husky": {
