@@ -55,7 +55,7 @@
     "lint": "yarn fix && yarn run check",
     "check": "yarn run pretty.check && gts check",
     "fix": "yarn run pretty.fix && gts fix",
-    "test.examples": "pushd examples/quickstart && rm yarn.lock && yarn && yarn start",
+    "test.examples": "cd examples/quickstart && rm yarn.lock && yarn && yarn start",
     "preversion": "yarn test && yarn test.examples",
     "docs": "yarn clean && yarn build && rm -rf docs && mkdir -p docs && ( mocha --grep='#private' --invert -R markdown >docs/index.md )",
     "test-unit": "yarn test --grep='#e2e|#int' --invert",
