@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v2.0.0...v3.0.0) (2019-08-07)
+
+
+### 🌟🚀 Features
+
+* support `date` from io-ts-types.  This new dependency is added as a peer -- code using it is only imported on calling `loadIoTsTypesFuzzers()` ([#11](https://github.com/holvonix-open/io-ts-fuzzer/issues/11)) ([4384326](https://github.com/holvonix-open/io-ts-fuzzer/commit/4384326))
+
+
+### ⚠️ BREAKING CHANGES
+
+* `core` exports re-organized; some removed.  From here on,
+only breaking changes to exports from `index.ts` will be deemed breaking
+changes for the package.
+
 # [2.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.2...v2.0.0) (2019-08-07)
 
 
