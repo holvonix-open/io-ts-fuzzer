@@ -1,13 +1,14 @@
 import { Fuzzer, ExampleGenerator, exampleGenerator } from './fuzzer';
 import * as t from 'io-ts';
-import { coreFuzzers, arrayFuzzer } from './core/';
 import {
   partialFuzzer,
   interfaceFuzzer,
   readonlyArrayFuzzer,
   anyArrayFuzzer,
   unknownFuzzer,
-} from './core/core';
+  arrayFuzzer,
+  coreFuzzers,
+} from './core';
 
 export interface Registry {
   register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;

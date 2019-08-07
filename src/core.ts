@@ -5,19 +5,12 @@ import {
   fuzzGenerator,
   FuzzContext,
   FuzzerUnit,
-} from '../fuzzer';
+  concreteFuzzerByName,
+} from './fuzzer';
 import { isLeft, isRight } from 'fp-ts/lib/Either';
-import * as rnd from 'seedrandom';
+import { rngi, rng } from './rng';
 
-function rng(seed: number) {
-  return rnd.tychei(`${seed}`, { global: false });
-}
-
-function rngi(seed: number) {
-  return Math.abs(rng(seed).int32());
-}
-
-export type BasicType =
+type BasicType =
   | t.AnyArrayType
   | t.ArrayType<t.Mixed>
   | t.BooleanType
@@ -43,22 +36,19 @@ export type BasicType =
   | t.DictionaryType<t.Mixed, t.Mixed>
   | t.RefinementType<t.Mixed>;
 
-export type basicFuzzGenerator<
+type basicFuzzGenerator<
   T,
   C extends t.Decoder<unknown, T> & BasicType
 > = fuzzGenerator<T, C>;
 
-export type basicLiteralConcreteFuzzer<
+type basicLiteralConcreteFuzzer<
   T,
   C extends t.Decoder<unknown, T> & BasicType
 > = ConcreteFuzzer<T>['func'];
 
-export type BasicFuzzer<
-  T,
-  C extends t.Decoder<unknown, T> & BasicType
-> = Fuzzer<T, C>;
+type BasicFuzzer<T, C extends t.Decoder<unknown, T> & BasicType> = Fuzzer<T, C>;
 
-export function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
+function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
   func: basicLiteralConcreteFuzzer<T, C>,
   tag: C['_tag']
 ): BasicFuzzer<T, C> {
@@ -73,22 +63,7 @@ export function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
   };
 }
 
-export function concreteNamed<T, C extends t.Decoder<unknown, T>>(
-  func: ConcreteFuzzer<T>['func'],
-  name: C['name']
-): Fuzzer<T, C> {
-  return {
-    impl: {
-      type: 'fuzzer',
-      func,
-      mightRecurse: false,
-    },
-    id: name,
-    idType: 'name',
-  };
-}
-
-export function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
+function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
   func: basicFuzzGenerator<T, C>,
   tag: C['_tag']
 ): BasicFuzzer<T, C> {
@@ -138,7 +113,7 @@ const fuzzUnknownWithType = (codec: t.Decoder<unknown, unknown>) => (
     mightRecurse: false,
     children: [codec],
     func: (ctx, n, h0) =>
-      ctx.shouldGoDeeper() ? h0.encode([rngi(n), ctx.deeper()]) : rngi(n),
+      ctx.mayRecurse() ? h0.encode([rngi(n), ctx.recursed()]) : rngi(n),
   };
 };
 
@@ -165,7 +140,7 @@ export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
     children: b.types,
     func: (ctx, n, ...h0) => {
       const r = rng(n);
-      const h1 = ctx.shouldGoDeeper() ? h0 : h0.filter(f => !f.mightRecurse);
+      const h1 = ctx.mayRecurse() ? h0 : h0.filter(f => !f.mightRecurse);
       const h = h1.length === 0 ? h0 : h1;
       return h[Math.abs(r.int32()) % h.length].encode([r.int32(), ctx]);
     },
@@ -242,7 +217,7 @@ function arrayFuzzFunc(maxLength: number) {
   return (ctx: FuzzContext, n: number, h0: FuzzerUnit<unknown>) => {
     const ret: unknown[] = [];
     const r = rng(n);
-    if (!ctx.shouldGoDeeper() && h0.mightRecurse) {
+    if (!ctx.mayRecurse() && h0.mightRecurse) {
       return ret;
     }
     const ml = Math.abs(r.int32()) % maxLength;
@@ -278,7 +253,7 @@ const fuzzReadonlyArrayWithMaxLength = (maxLength: number) => (
     func: (ctx, n, h0) => {
       const ret: unknown[] = [];
       const r = rng(n);
-      if (!ctx.shouldGoDeeper() && h0.mightRecurse) {
+      if (!ctx.mayRecurse() && h0.mightRecurse) {
         return ret;
       }
       const ml = Math.abs(r.int32()) % maxLength;
@@ -310,7 +285,7 @@ export function anyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
 
 export const defaultExtraProps = { ___0000_extra_: t.number };
 
-const fuzzPartialWithExtraCodec = (extra: t.Props) => (
+export const fuzzPartialWithExtraCodec = (extra: t.Props) => (
   b: t.PartialType<t.Props>
 ): ConcreteFuzzer<unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
@@ -328,7 +303,7 @@ const fuzzPartialWithExtraCodec = (extra: t.Props) => (
       const ret = Object.create(null);
       const r = rng(n0);
       h.forEach((v, i) => {
-        if ((ctx.shouldGoDeeper() || !v.mightRecurse) && r.int32() % 2 === 0) {
+        if ((ctx.mayRecurse() || !v.mightRecurse) && r.int32() % 2 === 0) {
           // Only allow key indices from the original type
           // or added keys not present in original type.
           if (i < kk.length || !kk.includes(keys[i])) {
@@ -345,7 +320,7 @@ export function partialFuzzer(extra: t.Props = defaultExtraProps) {
   return gen(fuzzPartialWithExtraCodec(extra), 'PartialType');
 }
 
-const fuzzInterfaceWithExtraCodec = (extra: t.Props) => (
+export const fuzzInterfaceWithExtraCodec = (extra: t.Props) => (
   b: t.InterfaceType<t.Props>
 ): ConcreteFuzzer<unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
@@ -366,7 +341,7 @@ const fuzzInterfaceWithExtraCodec = (extra: t.Props) => (
         if (i < kk.length) {
           ret[keys[i]] = v.encode([r.int32(), ctx]);
         } else if (
-          (ctx.shouldGoDeeper() || !v.mightRecurse) &&
+          (ctx.mayRecurse() || !v.mightRecurse) &&
           r.int32() % 2 === 0
         ) {
           // Only allow added keys not present in original type.
@@ -417,9 +392,9 @@ export function fuzzIntersection(
   };
 }
 
-export const coreFuzzers = [
+export const coreFuzzers: ReadonlyArray<Fuzzer> = [
   concrete(fuzzNumber, 'NumberType'),
-  concreteNamed(fuzzInt, 'Int'),
+  concreteFuzzerByName(fuzzInt, 'Int'),
   concrete(fuzzBoolean, 'BooleanType'),
   concrete(fuzzString, 'StringType'),
   concrete(fuzzNull, 'NullType'),
@@ -439,4 +414,4 @@ export const coreFuzzers = [
   gen(fuzzKeyof, 'KeyofType'),
   gen(fuzzTuple, 'TupleType'),
   gen(fuzzRecursive, 'RecursiveType'),
-];
+] as ReadonlyArray<Fuzzer>;

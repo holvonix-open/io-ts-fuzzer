@@ -3,13 +3,13 @@ import { Registry } from './registry';
 
 export interface FuzzContext {
   /**
-   * context for the next .
+   * context for the next level of recursion.
    */
-  deeper(): FuzzContext;
+  recursed(): FuzzContext;
   /**
    * false iff the fuzzer should not recurse deeper.
    */
-  shouldGoDeeper(): boolean;
+  mayRecurse(): boolean;
 }
 
 export interface Fuzzer<
@@ -40,6 +40,21 @@ export interface ConcreteFuzzer<T> {
   ) => T;
 }
 
+export function concreteFuzzerByName<T, C extends t.Decoder<unknown, T>>(
+  func: ConcreteFuzzer<T>['func'],
+  name: C['name']
+): Fuzzer<T, C> {
+  return {
+    impl: {
+      type: 'fuzzer',
+      func,
+      mightRecurse: false,
+    },
+    id: name,
+    idType: 'name',
+  };
+}
+
 export type fuzzGenerator<T, C extends t.Decoder<unknown, T>> = (
   b: C
 ) => ConcreteFuzzer<T>;
@@ -52,12 +67,12 @@ const defaultContextOpt = {
 
 export function fuzzContext(opt: ContextOpts = defaultContextOpt): FuzzContext {
   class FC implements FuzzContext {
-    constructor(private readonly mrh: number) {}
-    deeper(): FuzzContext {
-      return new FC(this.mrh - 1);
+    constructor(private readonly maxRecursionHint: number) {}
+    recursed(): FuzzContext {
+      return new FC(this.maxRecursionHint - 1);
     }
-    shouldGoDeeper(): boolean {
-      return this.mrh > 0;
+    mayRecurse(): boolean {
+      return this.maxRecursionHint > 0;
     }
   }
   const ropt = { ...defaultContextOpt, ...opt };
@@ -94,7 +109,7 @@ function encoderFunction<T>(
   children: Array<FuzzerUnit<unknown>>
 ): ExampleGenerator<T>['encode'] {
   return (a: [number, FuzzContext]) => {
-    return k.func(k.mightRecurse ? a[1].deeper() : a[1], a[0], ...children);
+    return k.func(k.mightRecurse ? a[1].recursed() : a[1], a[0], ...children);
   };
 }
 
@@ -159,13 +174,11 @@ export function exampleGenerator<T>(
   return ret;
 }
 
-export const defaultMaxRecursionHint = 5;
-
 export function exampleOf<T>(
   d: t.Decoder<unknown, T>,
   r: Registry,
   a: number,
-  maxRecursionHint: number = defaultMaxRecursionHint
+  maxRecursionHint?: number
 ): T {
   return exampleGenerator(r, d).encode([a, fuzzContext({ maxRecursionHint })]);
 }
