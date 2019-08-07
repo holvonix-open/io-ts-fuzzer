@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.2...v3.0.3) (2019-08-07)
+
+
+### 📖 Documentation
+
+* make examples work without yarn ([ec06241](https://github.com/holvonix-open/io-ts-fuzzer/commit/ec06241))
+
 ## [3.0.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.1...v3.0.2) (2019-08-07)
 
 
