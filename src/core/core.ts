@@ -1,6 +1,21 @@
 import * as t from 'io-ts';
-import { Fuzzer, ConcreteFuzzer, fuzzGenerator } from '../fuzzer';
+import {
+  Fuzzer,
+  ConcreteFuzzer,
+  fuzzGenerator,
+  FuzzContext,
+  FuzzerUnit,
+} from '../fuzzer';
 import { isLeft, isRight } from 'fp-ts/lib/Either';
+import * as rnd from 'seedrandom';
+
+function rng(seed: number) {
+  return rnd.tychei(`${seed}`, { global: false });
+}
+
+function rngi(seed: number) {
+  return Math.abs(rng(seed).int32());
+}
 
 export type BasicType =
   | t.AnyArrayType
@@ -22,10 +37,10 @@ export type BasicType =
   | t.UnionType<t.Mixed[]>
   | t.UnknownType
   | t.VoidType
+  | t.RecursiveType<t.Mixed>
   // not yet supported:
   | t.AnyDictionaryType
   | t.DictionaryType<t.Mixed, t.Mixed>
-  | t.RecursiveType<t.Mixed>
   | t.RefinementType<t.Mixed>;
 
 export type basicFuzzGenerator<
@@ -51,6 +66,7 @@ export function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
     impl: {
       type: 'fuzzer',
       func,
+      mightRecurse: false,
     },
     id: tag,
     idType: 'tag',
@@ -65,6 +81,7 @@ export function concreteNamed<T, C extends t.Decoder<unknown, T>>(
     impl: {
       type: 'fuzzer',
       func,
+      mightRecurse: false,
     },
     id: name,
     idType: 'name',
@@ -85,19 +102,19 @@ export function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
   };
 }
 
-export function fuzzBoolean(n: number): boolean {
+export function fuzzBoolean(_: FuzzContext, n: number): boolean {
   return n % 2 === 0;
 }
 
-export function fuzzNumber(n: number): number {
+export function fuzzNumber(_: FuzzContext, n: number): number {
   return n;
 }
 
-export function fuzzInt(n: number): t.TypeOf<typeof t.Int> {
+export function fuzzInt(_: FuzzContext, n: number): t.TypeOf<typeof t.Int> {
   return Math.floor(n) as t.TypeOf<typeof t.Int>;
 }
 
-export function fuzzString(n: number): string {
+export function fuzzString(_: FuzzContext, n: number): string {
   return `${n}`;
 }
 
@@ -117,8 +134,11 @@ const fuzzUnknownWithType = (codec: t.Decoder<unknown, unknown>) => (
   b: t.UnknownType
 ): ConcreteFuzzer<unknown> => {
   return {
+    // unknown recursion handled specially below
+    mightRecurse: false,
     children: [codec],
-    func: (n, h0) => h0.encode(n),
+    func: (ctx, n, h0) =>
+      ctx.shouldGoDeeper() ? h0.encode([rngi(n), ctx.deeper()]) : rngi(n),
   };
 };
 
@@ -128,17 +148,12 @@ export function unknownFuzzer(
   return gen(fuzzUnknownWithType(codec), 'UnknownType');
 }
 
-/**
- * @deprecated
- */
-export const fuzzUnknown = (n: number) =>
-  fuzzUnknownWithType(t.number)(t.unknown).func(n, t.number);
-
 export function fuzzLiteral(
   b: t.LiteralType<string | number | boolean>
 ): ConcreteFuzzer<unknown> {
   return {
-    func: n => {
+    mightRecurse: false,
+    func: () => {
       return b.value;
     },
   };
@@ -146,9 +161,13 @@ export function fuzzLiteral(
 
 export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
   return {
+    mightRecurse: false,
     children: b.types,
-    func: (n, ...h) => {
-      return h[n % h.length].encode(n);
+    func: (ctx, n, ...h0) => {
+      const r = rng(n);
+      const h1 = ctx.shouldGoDeeper() ? h0 : h0.filter(f => !f.mightRecurse);
+      const h = h1.length === 0 ? h0 : h1;
+      return h[Math.abs(r.int32()) % h.length].encode([r.int32(), ctx]);
     },
   };
 }
@@ -157,9 +176,10 @@ export function fuzzKeyof(
   b: t.KeyofType<{ [key: string]: unknown }>
 ): ConcreteFuzzer<unknown> {
   return {
-    func: n => {
+    mightRecurse: false,
+    func: (_, n) => {
       const h = Object.getOwnPropertyNames(b.keys);
-      return h[n % h.length];
+      return h[rngi(n) % h.length];
     },
   };
 }
@@ -168,22 +188,25 @@ export function fuzzTuple(
   b: t.TupleType<t.Mixed[]>
 ): ConcreteFuzzer<unknown[]> {
   return {
+    mightRecurse: false,
     children: b.types,
-    func: (n, ...h) => {
-      return h.map((v, i) => v.encode(n + i));
+    func: (ctx, n, ...h) => {
+      const r = rng(n);
+      return h.map((v, i) => v.encode([r.int32(), ctx]));
     },
   };
 }
 
 export function fuzzExact(b: t.ExactC<t.HasProps>): ConcreteFuzzer<unknown> {
   return {
+    mightRecurse: false,
     children: [b.type],
-    func: (n, h0) => {
-      const r = h0.encode(n);
+    func: (ctx, n, h0) => {
+      const r = h0.encode([n, ctx]);
       const d = b.decode(r);
       /* istanbul ignore if */
       if (!isRight(d)) {
-        throw new Error(`codec failed to decode underlying example`);
+        throw new Error(`IOTSF0003: codec failed to decode underlying example`);
       }
       return d.right;
     },
@@ -194,30 +217,49 @@ export function fuzzReadonly(
   b: t.ReadonlyType<t.Any>
 ): ConcreteFuzzer<unknown> {
   return {
+    mightRecurse: false,
     children: [b.type],
-    func: (n, h0) => {
-      const r = h0.encode(n);
+    func: (ctx, n, h0) => {
+      const r = h0.encode([n, ctx]);
       return Object.freeze(r);
     },
   };
 }
 
+export function fuzzRecursive(
+  b: t.RecursiveType<t.Mixed>
+): ConcreteFuzzer<unknown> {
+  return {
+    mightRecurse: true,
+    children: [b.type],
+    func: (ctx, n, h0) => {
+      return h0.encode([rngi(n), ctx]);
+    },
+  };
+}
+
 function arrayFuzzFunc(maxLength: number) {
-  return (n: number, h0: t.Encoder<number, unknown>) => {
-    const ret = [];
-    for (let index = 0; index < n % maxLength; index++) {
-      ret.push(h0.encode(n + index));
+  return (ctx: FuzzContext, n: number, h0: FuzzerUnit<unknown>) => {
+    const ret: unknown[] = [];
+    const r = rng(n);
+    if (!ctx.shouldGoDeeper() && h0.mightRecurse) {
+      return ret;
+    }
+    const ml = Math.abs(r.int32()) % maxLength;
+    for (let index = 0; index < ml; index++) {
+      ret.push(h0.encode([r.int32(), ctx]));
     }
     return ret;
   };
 }
 
-export const defaultMaxArrayLength = 13;
+export const defaultMaxArrayLength = 5;
 
-const fuzzArrayWithMaxLength = (maxLength: number = defaultMaxArrayLength) => (
+const fuzzArrayWithMaxLength = (maxLength: number) => (
   b: t.ArrayType<t.Mixed>
 ): ConcreteFuzzer<unknown[]> => {
   return {
+    mightRecurse: false,
     children: [b.type],
     func: arrayFuzzFunc(maxLength),
   };
@@ -227,20 +269,21 @@ export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
   return gen(fuzzArrayWithMaxLength(maxLength), 'ArrayType');
 }
 
-/**
- * @deprecated
- */
-export const fuzzArray = fuzzArrayWithMaxLength();
-
 const fuzzReadonlyArrayWithMaxLength = (maxLength: number) => (
   b: t.ReadonlyArrayType<t.Mixed>
 ): ConcreteFuzzer<unknown[]> => {
   return {
+    mightRecurse: false,
     children: [b.type],
-    func: (n, h0) => {
-      const ret = [];
-      for (let index = 0; index < n % maxLength; index++) {
-        ret.push(Object.freeze(h0.encode(n + index)));
+    func: (ctx, n, h0) => {
+      const ret: unknown[] = [];
+      const r = rng(n);
+      if (!ctx.shouldGoDeeper() && h0.mightRecurse) {
+        return ret;
+      }
+      const ml = Math.abs(r.int32()) % maxLength;
+      for (let index = 0; index < ml; index++) {
+        ret.push(Object.freeze(h0.encode([r.int32(), ctx])));
       }
       return ret;
     },
@@ -255,6 +298,7 @@ const fuzzAnyArrayWithMaxLength = (maxLength: number) => (
   b: t.AnyArrayType
 ): ConcreteFuzzer<unknown[]> => {
   return {
+    mightRecurse: false,
     children: [t.unknown],
     func: arrayFuzzFunc(maxLength),
   };
@@ -266,7 +310,7 @@ export function anyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
 
 export const defaultExtraProps = { ___0000_extra_: t.number };
 
-const fuzzPartialWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
+const fuzzPartialWithExtraCodec = (extra: t.Props) => (
   b: t.PartialType<t.Props>
 ): ConcreteFuzzer<unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
@@ -278,15 +322,17 @@ const fuzzPartialWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
     i < kk.length ? b.props[k] : extra[xx[i - kk.length]]
   );
   return {
+    mightRecurse: false,
     children: vals,
-    func: (n, ...h) => {
+    func: (ctx, n0, ...h) => {
       const ret = Object.create(null);
+      const r = rng(n0);
       h.forEach((v, i) => {
-        if (n & (2 ** i)) {
+        if ((ctx.shouldGoDeeper() || !v.mightRecurse) && r.int32() % 2 === 0) {
           // Only allow key indices from the original type
           // or added keys not present in original type.
           if (i < kk.length || !kk.includes(keys[i])) {
-            ret[keys[i]] = v.encode(n + i);
+            ret[keys[i]] = v.encode([r.int32(), ctx]);
           }
         }
       });
@@ -299,12 +345,7 @@ export function partialFuzzer(extra: t.Props = defaultExtraProps) {
   return gen(fuzzPartialWithExtraCodec(extra), 'PartialType');
 }
 
-/**
- * @deprecated
- */
-export const fuzzPartial = fuzzPartialWithExtraCodec();
-
-const fuzzInterfaceWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
+const fuzzInterfaceWithExtraCodec = (extra: t.Props) => (
   b: t.InterfaceType<t.Props>
 ): ConcreteFuzzer<unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
@@ -316,16 +357,21 @@ const fuzzInterfaceWithExtraCodec = (extra: t.Props = defaultExtraProps) => (
     i < kk.length ? b.props[k] : extra[xx[i - kk.length]]
   );
   return {
+    mightRecurse: false,
     children: vals,
-    func: (n, ...h) => {
+    func: (ctx, n0, ...h) => {
       const ret = Object.create(null);
+      const r = rng(n0);
       h.forEach((v, i) => {
         if (i < kk.length) {
-          ret[keys[i]] = v.encode(n + i);
-        } else if (n & (2 ** (i - kk.length))) {
+          ret[keys[i]] = v.encode([r.int32(), ctx]);
+        } else if (
+          (ctx.shouldGoDeeper() || !v.mightRecurse) &&
+          r.int32() % 2 === 0
+        ) {
           // Only allow added keys not present in original type.
           if (!kk.includes(keys[i])) {
-            ret[keys[i]] = v.encode(n + i);
+            ret[keys[i]] = v.encode([r.int32(), ctx]);
           }
         }
       });
@@ -338,25 +384,25 @@ export function interfaceFuzzer(extra: t.Props = defaultExtraProps) {
   return gen(fuzzInterfaceWithExtraCodec(extra), 'InterfaceType');
 }
 
-/**
- * @deprecated
- */
-export const fuzzInterface = fuzzInterfaceWithExtraCodec();
-
 export function fuzzIntersection(
   b: t.IntersectionType<t.Any[]>
 ): ConcreteFuzzer<unknown> {
   return {
+    mightRecurse: false,
     children: b.types,
-    func: (n, ...h) => {
+    func: (ctx, n, ...h) => {
       let d = 0;
       let ret: unknown = undefined;
+      const r = rng(n);
       do {
+        ret = undefined;
         h.forEach((v, i) => {
           let lp: unknown;
-          lp = v.encode(n + i + d);
+          lp = v.encode([r.int32(), ctx]);
           if (typeof lp !== 'object') {
-            throw new Error('fuzzIntersection cannot support non-object types');
+            throw new Error(
+              'IOTSF0002: fuzzIntersection cannot support non-object types'
+            );
           }
           if (ret === undefined) {
             ret = lp;
@@ -392,4 +438,5 @@ export const coreFuzzers = [
   gen(fuzzLiteral, 'LiteralType'),
   gen(fuzzKeyof, 'KeyofType'),
   gen(fuzzTuple, 'TupleType'),
+  gen(fuzzRecursive, 'RecursiveType'),
 ];

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as lib from '../src/registry';
 
 import { types, unknownTypes } from './tested-types';
-import { Fuzzer } from '../src';
+import { Fuzzer, fuzzContext } from '../src';
 import * as t from 'io-ts';
 
 describe('registry', () => {
@@ -21,7 +21,7 @@ describe('registry', () => {
     idType: 'tag',
     impl: {
       type: 'fuzzer',
-      func: n => {
+      func: (_, n) => {
         return n + 1;
       },
     },
@@ -31,7 +31,7 @@ describe('registry', () => {
     idType: 'tag',
     impl: {
       type: 'fuzzer',
-      func: n => {
+      func: (_, n) => {
         return `Bye ${n}`;
       },
     },
@@ -111,8 +111,11 @@ describe('registry', () => {
           assert.ok(x.idType === 'tag' || x.idType === 'name');
           if (x.idType === 'name') {
             assert.deepStrictEqual(x.id, b.name);
+          } else if ('_tag' in b) {
+            const s = b as { _tag: unknown };
+            assert.deepStrictEqual(x.id, s._tag);
           } else {
-            assert.deepStrictEqual(x.id, b._tag);
+            assert.fail('no name or tag');
           }
         });
       }
@@ -139,8 +142,11 @@ describe('registry', () => {
             assert.ok(x.idType === 'tag' || x.idType === 'name');
             if (x.idType === 'name') {
               assert.deepStrictEqual(x.id, b.name);
+            } else if ('_tag' in b) {
+              const s = b as { _tag: unknown };
+              assert.deepStrictEqual(x.id, s._tag);
             } else {
-              assert.deepStrictEqual(x.id, b._tag);
+              assert.fail('no name or tag');
             }
           });
         }
@@ -149,7 +155,7 @@ describe('registry', () => {
       describe('#exampleGenerator', () => {
         describe('on the core registry', () => {
           for (const b of types) {
-            it(`can create an example generator for \`${b.name}\` type`, () => {
+            it(`can create an example generator for \`${b.name}\` type`, async () => {
               const r = lib
                 .fluent(lib.createCoreRegistry())
                 .exampleGenerator(b);
@@ -169,7 +175,10 @@ describe('registry', () => {
               .withUnknownFuzzer(t.string)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              assert.deepStrictEqual(typeof r.encode(i), 'string');
+              assert.deepStrictEqual(
+                typeof r.encode([i, fuzzContext({ maxRecursionHint: 10 })]),
+                'string'
+              );
             }
           });
 
@@ -181,7 +190,7 @@ describe('registry', () => {
               .withUnknownFuzzer(t.string)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              const e = r.encode(i);
+              const e = r.encode([i, fuzzContext({ maxRecursionHint: 10 })]);
               e.forEach(x => assert.deepStrictEqual(typeof x, 'string'));
             }
           });
@@ -198,7 +207,9 @@ describe('registry', () => {
               .withArrayFuzzer(3)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              assert.ok(r.encode(i).length <= 3);
+              assert.ok(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+              );
             }
           });
 
@@ -211,7 +222,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             let ml = 0;
             for (let i = 0; i < 100; i++) {
-              ml = Math.max(r.encode(i).length, ml);
+              ml = Math.max(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                ml
+              );
             }
             assert.ok(ml > 3);
           });
@@ -222,7 +236,9 @@ describe('registry', () => {
             lib.fluent(r0).withArrayFuzzer(3);
             const r = r0.exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              assert.ok(r.encode(i).length <= 3);
+              assert.ok(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+              );
             }
           });
         });
@@ -238,7 +254,9 @@ describe('registry', () => {
               .withAnyArrayFuzzer(3)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              assert.ok(r.encode(i).length <= 3);
+              assert.ok(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+              );
             }
           });
 
@@ -251,7 +269,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             let ml = 0;
             for (let i = 0; i < 100; i++) {
-              ml = Math.max(r.encode(i).length, ml);
+              ml = Math.max(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                ml
+              );
             }
             assert.ok(ml > 3);
           });
@@ -265,7 +286,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             let ml = 0;
             for (let i = 0; i < 100; i++) {
-              ml = Math.max(r.encode(i).length, ml);
+              ml = Math.max(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                ml
+              );
             }
             assert.ok(ml > 3);
           });
@@ -282,7 +306,9 @@ describe('registry', () => {
               .withReadonlyArrayFuzzer(3)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              assert.ok(r.encode(i).length <= 3);
+              assert.ok(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+              );
             }
           });
 
@@ -295,7 +321,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             let ml = 0;
             for (let i = 0; i < 100; i++) {
-              ml = Math.max(r.encode(i).length, ml);
+              ml = Math.max(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                ml
+              );
             }
             assert.ok(ml > 3);
           });
@@ -313,7 +342,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              Object.keys(r.encode(i)).map(x => keys.add(x));
+              Object.keys(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })])
+              ).map(x => keys.add(x));
             }
             assert.deepStrictEqual(keys.size, 2);
             assert.ok(keys.has('a'));
@@ -333,7 +364,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              const ek = Object.keys(r.encode(i));
+              const ek = Object.keys(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })])
+              );
               assert.ok(ek.includes('a'));
               assert.ok(ek.includes('j'));
               ek.map(x => keys.add(x));
