@@ -39,7 +39,7 @@ console.log(fuzzer.encode([493, fuzz.fuzzContext()]));
 
 ## Types Supported
 
-Currently supports (along with their nested closure):
+Currently supports (along with their closure under composition):
 
 - `t.array`
 - `t.boolean`
@@ -63,9 +63,9 @@ Currently supports (along with their nested closure):
 - `t.UnknownArray`
 - `t.void`
 
-If you additionally do `yarn add monocle-ts io-ts-types` and register the
-`io-ts-types` extra fuzzers via `r.register(...await loadIoTsTypesFuzzers)`, the
-following additional types will be supported:
+If you `yarn add monocle-ts io-ts-types` and register the `io-ts-types` extra
+fuzzers via `r.register(...await loadIoTsTypesFuzzers())`, the following
+additional types will be supported:
 
 - `date`
 
@@ -101,6 +101,10 @@ to choose such a non-recursive path (and you'll get a stack limit error when
 attempting to generate the actual example from the generator).
 
 ### Generate Variations of a Type
+
+_TODO_
+
+### Piping Fuzzers
 
 _TODO_
 
