@@ -1,3 +1,15 @@
+## [3.0.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.1...v3.0.2) (2019-08-07)
+
+
+### 💄 Polish
+
+* prettify README.md ([5ca9127](https://github.com/holvonix-open/io-ts-fuzzer/commit/5ca9127))
+
+
+### 📖 Documentation
+
+* link to io-ts repo ([3eaef06](https://github.com/holvonix-open/io-ts-fuzzer/commit/3eaef06))
+
 ## [3.0.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.0...v3.0.1) (2019-08-07)
 
 
