@@ -1,0 +1,19 @@
+{
+  "name": "quickstart",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "fp-ts": "^2.0.4",
+    "io-ts": "^2.0.1",
+    "io-ts-fuzzer": "../../"
+  },
+  "devDependencies": {
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  }
+}
