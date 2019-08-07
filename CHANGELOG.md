@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.2...v2.0.0) (2019-08-07)
+
+
+### 🌟🚀 Features
+
+* support recursive types ([#9](https://github.com/holvonix-open/io-ts-fuzzer/issues/9)) ([0c39bff](https://github.com/holvonix-open/io-ts-fuzzer/commit/0c39bff))
+
+
+### ⚠️ BREAKING CHANGES
+
+* `ExampleGenerator` now requires as input a tuple `[number,FuzzContext]`
+* concrete fuzzer functions are passed as their first argument a FuzzContext specifying whether to recurse further or not
+* deprecated, non-configurable versions of core fuzzers removed
+
 ## [1.10.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v1.10.1...v1.10.2) (2019-08-06)
 
 
