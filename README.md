@@ -21,12 +21,12 @@ const target = t.union([t.string, t.type({n:t.number, b:t.boolean})]);
 // Builds a particular fuzzer from the registry.
 const fuzzer = fuzz.exampleGenerator(r, target);
 
-// Make examples. The input number fully determines
-// the output example.
-console.log(fuzzer.encode(0));
-console.log(fuzzer.encode(1));
-console.log(fuzzer.encode(2));
-console.log(fuzzer.encode(493));
+// Make examples. The input integer and context
+// fully determines the output example.
+console.log(fuzzer.encode([0, fuzz.fuzzContext()]));
+console.log(fuzzer.encode([1, fuzz.fuzzContext()]));
+console.log(fuzzer.encode([2, fuzz.fuzzContext()]));
+console.log(fuzzer.encode([493, fuzz.fuzzContext()]));
 ````
 
 ## Types Supported
@@ -45,6 +45,7 @@ Currently supports (and their nested closure):
 * `t.partial`
 * `t.readonly`
 * `t.readonlyArray`
+* `t.recursive`
 * `t.string`
 * `t.tuple`
 * `t.type` (interface)
@@ -59,7 +60,7 @@ Currently supports (and their nested closure):
 ### Generating Conforming Examples and Verifying Decoder Behavior
 
 Given a `d = t.Decoder<I,A>` (aka a `t.Type`), `fuzz.exampleGenerator` will
-build a `t.Encoder<number,A>` that will give example instances of `A`.
+build a `t.Encoder<[number,FuzzContext],A>` that will give example instances of `A`.
 The example instances should all pass on `d.decode`, which should return
 an identical example.  No exceptions should be thrown.
 
@@ -71,6 +72,20 @@ fuzzers, currently:
 * maximum array length (`array`, `readonlyArray`, `UnknownArray`)
 * extra properties inserted into `partial` and `type` (interface) objects
 * type used to fuzz `unknown` types
+
+### Recursive Types
+
+When fuzzing recursive types, you can provide to the context
+a `maxRecursionHint` which specifies the requested maximum
+instantiations of any recursive type.  Note that this is the
+maximum depth of *recursive* types, not all types.  If the
+recursive depth has been reached, fuzzers that have a choice
+of which child(ren) to instantiate (like unions, partials,
+or arrays) will attempt to choose children that won't recurse.
+
+Note this is only a hint -- sometimes the type definition won't allow the fuzzer to choose such a non-recursive path
+(and you'll get a stack limit error when attempting to
+generate the actual example from the generator).
 
 ### Fuzzing a Type (TODO)
 

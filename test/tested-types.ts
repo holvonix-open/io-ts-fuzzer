@@ -1,6 +1,111 @@
 import * as t from 'io-ts';
 
-export const types = [
+// tslint:disable-next-line:variable-name
+const RecA: t.Type<unknown> = t.recursion('RecA', () =>
+  t.union([t.number, RecA])
+);
+
+interface RecB {
+  next: number | RecB;
+}
+
+// tslint:disable-next-line:variable-name
+const RecB: t.Type<RecB> = t.recursion('RecB', () =>
+  t.type({
+    next: t.union([RecB, t.number]),
+  })
+);
+// tslint:disable-next-line:class-name
+interface RecB_Partial {
+  next?: RecB_Partial;
+}
+// tslint:disable-next-line:variable-name
+const RecB_Partial: t.Type<Partial<RecB_Partial>> = t.recursion(
+  'RecB_Partial',
+  () =>
+    t.partial({
+      next: RecB_Partial,
+    })
+);
+// tslint:disable-next-line:class-name
+interface RecC1_MutualRecursion {
+  c1: number | RecC1_MutualRecursion;
+  next: undefined | RecC2_MutualRecursion;
+}
+// tslint:disable-next-line:class-name
+interface RecC2_MutualRecursion {
+  c2: string | RecC2_MutualRecursion;
+  next: undefined | RecC1_MutualRecursion;
+}
+// tslint:disable-next-line:variable-name
+const RecC1_MutualRecursion: t.Type<RecC1_MutualRecursion> = t.recursion(
+  'RecC1_MutualRecursion',
+  () =>
+    t.type({
+      c1: t.union([t.number, RecC1_MutualRecursion]),
+      next: t.union([t.undefined, RecC2_MutualRecursion]),
+    })
+);
+// tslint:disable-next-line:variable-name
+const RecC2_MutualRecursion: t.Type<RecC2_MutualRecursion> = t.recursion(
+  'RecC2_MutualRecursion',
+  () =>
+    t.type({
+      c2: t.union([t.string, RecC2_MutualRecursion]),
+      next: t.union([t.undefined, RecC1_MutualRecursion]),
+    })
+);
+// tslint:disable-next-line:class-name
+interface RecE1_ArrayOfRecursion {
+  next: RecE1_ArrayOfRecursion[];
+}
+// tslint:disable-next-line:variable-name
+const RecE1_ArrayOfRecursion: t.Type<RecE1_ArrayOfRecursion> = t.recursion(
+  'RecE1_ArrayOfRecursion',
+  () =>
+    t.type({
+      next: t.array(RecE1_ArrayOfRecursion),
+    })
+);
+// tslint:disable-next-line:class-name
+interface RecD1_MutualRecursionReadonlyArray {
+  c1: number | RecD1_MutualRecursionReadonlyArray;
+  next: ReadonlyArray<RecD2_MutualRecursionArray>;
+}
+// tslint:disable-next-line:class-name
+interface RecD2_MutualRecursionArray {
+  c2: string | RecD2_MutualRecursionArray;
+  next: undefined | RecD1_MutualRecursionReadonlyArray;
+}
+// tslint:disable-next-line:variable-name
+const RecD1_MutualRecursionReadonlyArray: t.Type<
+  RecD1_MutualRecursionReadonlyArray
+> = t.recursion('RecD1_MutualRecursionReadonlyArray', () =>
+  t.type({
+    c1: t.union([t.number, RecD1_MutualRecursionReadonlyArray]),
+    next: t.readonlyArray(RecD2_MutualRecursionArray),
+  })
+);
+// tslint:disable-next-line:variable-name
+const RecD2_MutualRecursionArray: t.Type<
+  RecD2_MutualRecursionArray
+> = t.recursion('RecD2_MutualRecursionArray', () =>
+  t.type({
+    c2: t.union([t.string, RecD2_MutualRecursionArray]),
+    next: t.union([t.undefined, RecD1_MutualRecursionReadonlyArray]),
+  })
+);
+
+export const types: Array<t.Decoder<unknown, unknown>> = [
+  // Recursive types
+  RecA,
+  RecB,
+  RecB_Partial,
+  RecC1_MutualRecursion,
+  RecC2_MutualRecursion,
+  RecE1_ArrayOfRecursion,
+  RecD1_MutualRecursionReadonlyArray,
+  RecD2_MutualRecursionArray,
   // Simple 0- or 1-depth types
   t.number,
   t.string,
@@ -40,7 +145,8 @@ export const types = [
   t.readonly(t.string),
   t.readonly(t.tuple([t.string, t.boolean])),
   t.readonly(t.type({ s: t.string, j: t.boolean })),
-  // Complex types
+
+  // Complex nested types
   t.exact(
     t.intersection([
       t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
@@ -64,7 +170,7 @@ export const types = [
       t.readonly(
         t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
       ),
-      t.type({ s2: t.string, j: t.boolean }),
+      t.type({ s2: t.string, j: t.boolean, rec: RecC1_MutualRecursion }),
     ])
   ),
   t.exact(
