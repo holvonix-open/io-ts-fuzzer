@@ -1,3 +1,10 @@
+## [3.0.5](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.4...v3.0.5) (2019-08-08)
+
+
+### 🐛 Bug Fixes
+
+* ensure non-integers can be used as input to fuzzers ([2d5cc60](https://github.com/holvonix-open/io-ts-fuzzer/commit/2d5cc60))
+
 ## [3.0.4](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.3...v3.0.4) (2019-08-08)
 
 
