@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.3...v3.0.4) (2019-08-08)
+
+
+### 🐛 Bug Fixes
+
+* string examples made slightly more interesting ([4213c0e](https://github.com/holvonix-open/io-ts-fuzzer/commit/4213c0e))
+
 ## [3.0.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.2...v3.0.3) (2019-08-07)
 
 
