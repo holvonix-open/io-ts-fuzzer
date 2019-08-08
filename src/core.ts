@@ -78,15 +78,15 @@ function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
 }
 
 export function fuzzBoolean(_: FuzzContext, n: number): boolean {
-  return n % 2 === 0;
+  return rng(n).int32() % 2 === 0;
 }
 
 export function fuzzNumber(_: FuzzContext, n: number): number {
-  return n;
+  return n / Math.PI;
 }
 
 export function fuzzInt(_: FuzzContext, n: number): t.TypeOf<typeof t.Int> {
-  return Math.floor(n) as t.TypeOf<typeof t.Int>;
+  return rng(n).int32() as t.TypeOf<typeof t.Int>;
 }
 
 export function fuzzString(_: FuzzContext, n: number): string {
