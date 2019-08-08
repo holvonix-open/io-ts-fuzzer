@@ -90,7 +90,7 @@ export function fuzzInt(_: FuzzContext, n: number): t.TypeOf<typeof t.Int> {
 }
 
 export function fuzzString(_: FuzzContext, n: number): string {
-  return `${n}`;
+  return (Math.abs(n) / Math.PI).toString(36);
 }
 
 export function fuzzNull(): null {
