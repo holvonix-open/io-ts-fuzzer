@@ -14,50 +14,62 @@ export interface FuzzContext {
 
 export interface Fuzzer<
   T = unknown,
-  C extends t.Decoder<unknown, T> = t.Decoder<unknown, T>
+  U = unknown,
+  C extends t.Decoder<U, T> = t.Decoder<U, T>
 > {
   readonly id: string;
   readonly idType: 'name' | 'tag';
-  readonly impl: FuzzerGenerator<T, C> | ImmediateConcreteFuzzer<T>;
+  readonly impl: FuzzerGenerator<T, U, C> | ImmediateConcreteFuzzer<T, U>;
 }
 
-export interface FuzzerGenerator<T, C extends t.Decoder<unknown, T>> {
+export interface FuzzerGenerator<T, U, C extends t.Decoder<U, T>> {
   readonly type: 'generator';
-  readonly func: fuzzGenerator<T, C>;
+  readonly func: fuzzGenerator<T, U, C>;
 }
 
-export interface ImmediateConcreteFuzzer<T> extends ConcreteFuzzer<T> {
+export interface ImmediateConcreteFuzzer<T, U> extends ConcreteFuzzer<T, U> {
   readonly type: 'fuzzer';
 }
 
-export interface ConcreteFuzzer<T> {
-  readonly children?: Array<t.Decoder<unknown, unknown>>;
+export interface ConcreteFuzzer<T, U> {
+  // tslint:disable-next-line:no-any
+  readonly children?: Array<t.Decoder<any, unknown>>;
   readonly mightRecurse?: boolean;
   readonly func: (
     ctx: FuzzContext,
     n: number,
     ...h: Array<FuzzerUnit<unknown>>
-  ) => T;
+  ) => U;
 }
 
-export function concreteFuzzerByName<T, C extends t.Decoder<unknown, T>>(
-  func: ConcreteFuzzer<T>['func'],
+export function fuzzerByName<T, U, C extends t.Decoder<U, T>>(
+  impl: Fuzzer<T, U, C>['impl'],
   name: C['name']
-): Fuzzer<T, C> {
+): Fuzzer<T, U, C> {
   return {
-    impl: {
-      type: 'fuzzer',
-      func,
-      mightRecurse: false,
-    },
+    impl,
     id: name,
     idType: 'name',
   };
 }
 
-export type fuzzGenerator<T, C extends t.Decoder<unknown, T>> = (
+export function concreteFuzzerByName<T, U, C extends t.Decoder<U, T>>(
+  func: ConcreteFuzzer<T, U>['func'],
+  name: C['name']
+): Fuzzer<T, U, C> {
+  return fuzzerByName(
+    {
+      type: 'fuzzer',
+      func,
+      mightRecurse: false,
+    },
+    name
+  );
+}
+
+export type fuzzGenerator<T, U, C extends t.Decoder<U, T>> = (
   b: C
-) => ConcreteFuzzer<T>;
+) => ConcreteFuzzer<T, U>;
 
 export type ContextOpts = Partial<typeof defaultContextOpt>;
 
@@ -87,49 +99,56 @@ export function fuzzContext(opt: ContextOpts = defaultContextOpt): FuzzContext {
 export interface ExampleGenerator<T>
   extends t.Encoder<[number, FuzzContext], T> {}
 
-export interface FuzzerUnit<T> extends ExampleGenerator<T> {
+export interface FuzzerUnit<U> extends ExampleGenerator<U> {
   readonly mightRecurse: boolean;
 }
 
-interface CachedFuzzerUnit<T> extends FuzzerUnit<T> {
-  readonly decoder: t.Decoder<unknown, T>;
+interface CachedFuzzerUnit<T, U> extends FuzzerUnit<U> {
+  readonly decoder: t.Decoder<U, T>;
 }
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
-type CacheCF = Map<t.Decoder<unknown, unknown>, ConcreteFuzzer<unknown>>;
-type CacheEG = Map<ConcreteFuzzer<unknown>, CachedFuzzerUnit<unknown>>;
+// tslint:disable-next-line:no-any
+type CacheCF = Map<t.Decoder<any, unknown>, ConcreteFuzzer<unknown, any>>;
+
+type CacheEG = Map<
+  // tslint:disable-next-line:no-any
+  ConcreteFuzzer<unknown, any>,
+  // tslint:disable-next-line:no-any
+  CachedFuzzerUnit<unknown, any>
+>;
 class Cache {
   readonly cf: CacheCF = new Map();
   readonly ef: CacheEG = new Map();
 }
 
-function encoderFunction<T>(
-  k: ConcreteFuzzer<T>,
+function encoderFunction<T, U>(
+  k: ConcreteFuzzer<T, U>,
   children: Array<FuzzerUnit<unknown>>
-): ExampleGenerator<T>['encode'] {
+): ExampleGenerator<U>['encode'] {
   return (a: [number, FuzzContext]) => {
     return k.func(k.mightRecurse ? a[1].recursed() : a[1], a[0], ...children);
   };
 }
 
-function cachedExampleGeneratorFromConcreteFuzzer<T>(
+function cachedExampleGeneratorFromConcreteFuzzer<T, U>(
   c: Cache,
   r: Registry,
-  fi: ConcreteFuzzer<T>,
-  d: t.Decoder<unknown, T>
-): CachedFuzzerUnit<T> {
+  fi: ConcreteFuzzer<T, U>,
+  d: t.Decoder<U, T>
+): CachedFuzzerUnit<T, U> {
   const g = c.ef.get(fi);
   if (g != null) {
-    return g as CachedFuzzerUnit<T>;
+    return g as CachedFuzzerUnit<T, U>;
   }
   // allows us to cache circular references
-  const mut: Mutable<CachedFuzzerUnit<T>> = {
-    encode: (undefined as unknown) as t.Encode<[number, FuzzContext], T>,
+  const mut: Mutable<CachedFuzzerUnit<T, U>> = {
+    encode: (undefined as unknown) as t.Encode<[number, FuzzContext], U>,
     mightRecurse: !!fi.mightRecurse,
     decoder: d,
   };
-  c.ef.set(fi, mut);
+  c.ef.set(fi, mut as CachedFuzzerUnit<unknown, unknown>);
   const children = fi.children
     ? fi.children.map(x => cachedExampleGenerator(c, r, x))
     : [];
@@ -139,17 +158,17 @@ function cachedExampleGeneratorFromConcreteFuzzer<T>(
   return mut;
 }
 
-function cachedExampleGenerator<T>(
+function cachedExampleGenerator<T, U>(
   c: Cache,
   r: Registry,
-  d: t.Decoder<unknown, T>
-): CachedFuzzerUnit<T> {
+  d: t.Decoder<U, T>
+): CachedFuzzerUnit<T, U> {
   const g = c.cf.get(d);
   if (g != null) {
-    return cachedExampleGeneratorFromConcreteFuzzer<T>(
+    return cachedExampleGeneratorFromConcreteFuzzer<T, U>(
       c,
       r,
-      g as ConcreteFuzzer<T>,
+      g as ConcreteFuzzer<T, U>,
       d
     );
   }
@@ -163,10 +182,10 @@ function cachedExampleGenerator<T>(
   return cachedExampleGeneratorFromConcreteFuzzer(c, r, cf, d);
 }
 
-export function exampleGenerator<T>(
+export function exampleGenerator<T, U>(
   r: Registry,
-  d: t.Decoder<unknown, T>
-): ExampleGenerator<T> {
+  d: t.Decoder<U, T>
+): ExampleGenerator<U> {
   const c = new Cache();
   const ret = { ...cachedExampleGenerator(c, r, d) };
   delete ret.mightRecurse;
@@ -174,11 +193,11 @@ export function exampleGenerator<T>(
   return ret;
 }
 
-export function exampleOf<T>(
-  d: t.Decoder<unknown, T>,
+export function exampleOf<T, U>(
+  d: t.Decoder<U, T>,
   r: Registry,
   a: number,
   maxRecursionHint?: number
-): T {
+): U {
   return exampleGenerator(r, d).encode([a, fuzzContext({ maxRecursionHint })]);
 }

@@ -38,20 +38,22 @@ type BasicType =
 
 type basicFuzzGenerator<
   T,
-  C extends t.Decoder<unknown, T> & BasicType
-> = fuzzGenerator<T, C>;
+  U,
+  C extends t.Decoder<U, T> & BasicType
+> = fuzzGenerator<T, U, C>;
 
 type basicLiteralConcreteFuzzer<
   T,
-  C extends t.Decoder<unknown, T> & BasicType
-> = ConcreteFuzzer<T>['func'];
+  U,
+  C extends t.Decoder<U, T> & BasicType
+> = ConcreteFuzzer<T, U>['func'];
 
-type BasicFuzzer<T, C extends t.Decoder<unknown, T> & BasicType> = Fuzzer<T, C>;
+type BasicFuzzer<T, U, C extends t.Decoder<U, T> & BasicType> = Fuzzer<T, U, C>;
 
-function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
-  func: basicLiteralConcreteFuzzer<T, C>,
+function concrete<T, U, C extends t.Decoder<U, T> & BasicType>(
+  func: basicLiteralConcreteFuzzer<T, U, C>,
   tag: C['_tag']
-): BasicFuzzer<T, C> {
+): BasicFuzzer<T, U, C> {
   return {
     impl: {
       type: 'fuzzer',
@@ -63,10 +65,10 @@ function concrete<T, C extends t.Decoder<unknown, T> & BasicType>(
   };
 }
 
-function gen<T, C extends t.Decoder<unknown, T> & BasicType>(
-  func: basicFuzzGenerator<T, C>,
+function gen<T, U, C extends t.Decoder<U, T> & BasicType>(
+  func: basicFuzzGenerator<T, U, C>,
   tag: C['_tag']
-): BasicFuzzer<T, C> {
+): BasicFuzzer<T, U, C> {
   return {
     impl: {
       type: 'generator',
@@ -107,7 +109,7 @@ export const defaultUnknownType = t.type({ __default_any_0: t.number });
 
 const fuzzUnknownWithType = (codec: t.Decoder<unknown, unknown>) => (
   b: t.UnknownType
-): ConcreteFuzzer<unknown> => {
+): ConcreteFuzzer<unknown, unknown> => {
   return {
     // unknown recursion handled specially below
     mightRecurse: false,
@@ -125,7 +127,7 @@ export function unknownFuzzer(
 
 export function fuzzLiteral(
   b: t.LiteralType<string | number | boolean>
-): ConcreteFuzzer<unknown> {
+): ConcreteFuzzer<string | number | boolean, unknown> {
   return {
     mightRecurse: false,
     func: () => {
@@ -134,7 +136,9 @@ export function fuzzLiteral(
   };
 }
 
-export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
+export function fuzzUnion(
+  b: t.UnionType<t.Mixed[]>
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: false,
     children: b.types,
@@ -149,7 +153,7 @@ export function fuzzUnion(b: t.UnionType<t.Mixed[]>): ConcreteFuzzer<unknown> {
 
 export function fuzzKeyof(
   b: t.KeyofType<{ [key: string]: unknown }>
-): ConcreteFuzzer<unknown> {
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: false,
     func: (_, n) => {
@@ -161,7 +165,7 @@ export function fuzzKeyof(
 
 export function fuzzTuple(
   b: t.TupleType<t.Mixed[]>
-): ConcreteFuzzer<unknown[]> {
+): ConcreteFuzzer<unknown[], unknown> {
   return {
     mightRecurse: false,
     children: b.types,
@@ -172,7 +176,9 @@ export function fuzzTuple(
   };
 }
 
-export function fuzzExact(b: t.ExactC<t.HasProps>): ConcreteFuzzer<unknown> {
+export function fuzzExact(
+  b: t.ExactC<t.HasProps>
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: false,
     children: [b.type],
@@ -190,7 +196,7 @@ export function fuzzExact(b: t.ExactC<t.HasProps>): ConcreteFuzzer<unknown> {
 
 export function fuzzReadonly(
   b: t.ReadonlyType<t.Any>
-): ConcreteFuzzer<unknown> {
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: false,
     children: [b.type],
@@ -203,7 +209,7 @@ export function fuzzReadonly(
 
 export function fuzzRecursive(
   b: t.RecursiveType<t.Mixed>
-): ConcreteFuzzer<unknown> {
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: true,
     children: [b.type],
@@ -232,7 +238,7 @@ export const defaultMaxArrayLength = 5;
 
 const fuzzArrayWithMaxLength = (maxLength: number) => (
   b: t.ArrayType<t.Mixed>
-): ConcreteFuzzer<unknown[]> => {
+): ConcreteFuzzer<unknown[], unknown> => {
   return {
     mightRecurse: false,
     children: [b.type],
@@ -246,7 +252,7 @@ export function arrayFuzzer(maxLength: number = defaultMaxArrayLength) {
 
 const fuzzReadonlyArrayWithMaxLength = (maxLength: number) => (
   b: t.ReadonlyArrayType<t.Mixed>
-): ConcreteFuzzer<unknown[]> => {
+): ConcreteFuzzer<unknown[], unknown> => {
   return {
     mightRecurse: false,
     children: [b.type],
@@ -271,7 +277,7 @@ export function readonlyArrayFuzzer(maxLength: number = defaultMaxArrayLength) {
 
 const fuzzAnyArrayWithMaxLength = (maxLength: number) => (
   b: t.AnyArrayType
-): ConcreteFuzzer<unknown[]> => {
+): ConcreteFuzzer<unknown[], unknown> => {
   return {
     mightRecurse: false,
     children: [t.unknown],
@@ -287,7 +293,7 @@ export const defaultExtraProps = { ___0000_extra_: t.number };
 
 export const fuzzPartialWithExtraCodec = (extra: t.Props) => (
   b: t.PartialType<t.Props>
-): ConcreteFuzzer<unknown> => {
+): ConcreteFuzzer<unknown, unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
   const xx = Object.getOwnPropertyNames(extra);
   const keys = Object.getOwnPropertyNames(b.props).concat(
@@ -322,7 +328,7 @@ export function partialFuzzer(extra: t.Props = defaultExtraProps) {
 
 export const fuzzInterfaceWithExtraCodec = (extra: t.Props) => (
   b: t.InterfaceType<t.Props>
-): ConcreteFuzzer<unknown> => {
+): ConcreteFuzzer<unknown, unknown> => {
   const kk = Object.getOwnPropertyNames(b.props);
   const xx = Object.getOwnPropertyNames(extra);
   const keys = Object.getOwnPropertyNames(b.props).concat(
@@ -361,7 +367,7 @@ export function interfaceFuzzer(extra: t.Props = defaultExtraProps) {
 
 export function fuzzIntersection(
   b: t.IntersectionType<t.Any[]>
-): ConcreteFuzzer<unknown> {
+): ConcreteFuzzer<unknown, unknown> {
   return {
     mightRecurse: false,
     children: b.types,
@@ -392,7 +398,8 @@ export function fuzzIntersection(
   };
 }
 
-export const coreFuzzers: ReadonlyArray<Fuzzer> = [
+// tslint:disable-next-line:no-any
+export const coreFuzzers: ReadonlyArray<Fuzzer<unknown, unknown, any>> = [
   concrete(fuzzNumber, 'NumberType'),
   concreteFuzzerByName(fuzzInt, 'Int'),
   concrete(fuzzBoolean, 'BooleanType'),
@@ -414,4 +421,5 @@ export const coreFuzzers: ReadonlyArray<Fuzzer> = [
   gen(fuzzKeyof, 'KeyofType'),
   gen(fuzzTuple, 'TupleType'),
   gen(fuzzRecursive, 'RecursiveType'),
-] as ReadonlyArray<Fuzzer>;
+  // tslint:disable-next-line:no-any
+] as ReadonlyArray<Fuzzer<unknown, unknown, any>>;

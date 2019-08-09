@@ -25,9 +25,9 @@ describe('io-ts-fuzzer', () => {
             const d = b.decode(v);
             assert.ok(isRight(d), `must decode ${JSON.stringify(v)}`);
             assert.deepStrictEqual(
-              (d as Right<unknown>).right,
+              b.encode((d as Right<unknown>).right),
               v,
-              `must decode ${JSON.stringify(v)}`
+              `must encode back to ${JSON.stringify(v)}`
             );
             old.push(v);
           }

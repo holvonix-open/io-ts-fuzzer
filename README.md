@@ -65,20 +65,36 @@ Currently supports (along with their closure under composition):
 - `t.UnknownArray`
 - `t.void`
 
-If you `yarn add monocle-ts io-ts-types` and register the `io-ts-types` extra
-fuzzers via `r.register(...await loadIoTsTypesFuzzers())`, the following
-additional types will be supported:
+If you `yarn add monocle-ts io-ts-types` and register the
+[`io-ts-types`](https://github.com/gcanti/io-ts) extra fuzzers via
+`r.register(...await loadIoTsTypesFuzzers())`, the following additional types
+will be supported:
 
 - `date`
+- `BooleanFromString`
+- `DateFromISOString`
+- `DateFromNumber`
+- `DateFromUnixTime`
+- `IntFromString`
+- `NonEmptyString`
+- `NumberFromString`
+- `UUID`
+- `regexp`
+
+The following `io-ts-types` are composed of core types and you do not need to
+`loadIoTsTypesFuzzers` to fuzz them:
+
+- `either`
+- `option`
 
 ## How To
 
 ### Generate Conforming Examples and Verifying Decoder Behavior
 
 Given a `d = t.Decoder<I,A>` (aka a `t.Type`), `fuzz.exampleGenerator` will
-build a `t.Encoder<[number,FuzzContext],A>` that will give example instances of
-`A`. The example instances should all pass on `d.decode`, which should return an
-identical example. No exceptions should be thrown.
+build a `t.Encoder<[number,FuzzContext],I>` that will give example instances of
+`I`. The example instances should all pass on `d.decode` (which should return an
+identical example in the case of basic types). No exceptions should be thrown.
 
 ### Configure Core Fuzzers
 

@@ -95,8 +95,8 @@ const RecD2_MutualRecursionArray: t.Type<
     next: t.union([t.undefined, RecD1_MutualRecursionReadonlyArray]),
   })
 );
-
-export const types: Array<t.Decoder<unknown, unknown>> = [
+// tslint:disable-next-line:no-any
+export const types: Array<t.Type<any>> = [
   // Recursive types
   RecA,
   RecB,
