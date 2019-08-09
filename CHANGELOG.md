@@ -1,3 +1,30 @@
+# [4.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.5...v4.0.0) (2019-08-09)
+
+
+### 🌟🚀 Features
+
+* support io-ts-types ([#18](https://github.com/holvonix-open/io-ts-fuzzer/issues/18)) ([5489f03](https://github.com/holvonix-open/io-ts-fuzzer/commit/5489f03))
+
+
+### 📖 Documentation
+
+* fix README link typo ([4b9b5a2](https://github.com/holvonix-open/io-ts-fuzzer/commit/4b9b5a2))
+
+
+### 🧦 Miscellaneous
+
+* **deps:** bump seedrandom from 3.0.1 to 3.0.3 ([#16](https://github.com/holvonix-open/io-ts-fuzzer/issues/16)) ([91e2346](https://github.com/holvonix-open/io-ts-fuzzer/commit/91e2346))
+* **deps-dev:** bump @types/chai from 4.1.7 to 4.2.0 ([#15](https://github.com/holvonix-open/io-ts-fuzzer/issues/15)) ([593a4dc](https://github.com/holvonix-open/io-ts-fuzzer/commit/593a4dc))
+* **deps-dev:** bump @types/node from 12.7.0 to 12.7.1 ([9be1c28](https://github.com/holvonix-open/io-ts-fuzzer/commit/9be1c28))
+* **deps-dev:** bump fp-ts from 2.0.4 to 2.0.5 ([#17](https://github.com/holvonix-open/io-ts-fuzzer/issues/17)) ([6d16718](https://github.com/holvonix-open/io-ts-fuzzer/commit/6d16718))
+* **deps-dev:** bump husky from 3.0.2 to 3.0.3 ([#14](https://github.com/holvonix-open/io-ts-fuzzer/issues/14)) ([83b11a5](https://github.com/holvonix-open/io-ts-fuzzer/commit/83b11a5))
+* make prod deps updates chores by default ([1d16fd1](https://github.com/holvonix-open/io-ts-fuzzer/commit/1d16fd1))
+
+
+### ⚠️ BREAKING CHANGES
+
+* Fuzzers now have an input and decoded type.  Fuzzer generate as output the *input* of the t.Type, not the decoded or output types.
+
 ## [3.0.5](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.4...v3.0.5) (2019-08-08)
 
 
