@@ -11,12 +11,12 @@ import {
 } from './core';
 
 export interface Registry {
-  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
+  register<T, U, C extends t.Decoder<U, T>>(v0: Fuzzer<T, U, C>): Registry;
   register(...vv: Fuzzer[]): Registry;
 
-  exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T>;
+  exampleGenerator<T, U>(d: t.Decoder<U, T>): ExampleGenerator<U>;
 
-  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null;
+  getFuzzer<T, U>(a: t.Decoder<U, T>): Fuzzer<T, U> | null;
 }
 
 export interface FluentRegistry extends Registry {
@@ -34,17 +34,17 @@ class FluentifiedRegistry implements FluentRegistry {
     this.pimpl = pimpl;
   }
 
-  register<T, U extends t.Decoder<unknown, T>>(v0: Fuzzer<T, U>): Registry;
+  register<T, U, C extends t.Decoder<U, T>>(v0: Fuzzer<T, U, C>): Registry;
   register(...vv: Fuzzer[]): FluentRegistry {
     this.pimpl.register(...vv);
     return this;
   }
 
-  exampleGenerator<T>(d: t.Decoder<unknown, T>): ExampleGenerator<T> {
+  exampleGenerator<T, U>(d: t.Decoder<U, T>): ExampleGenerator<U> {
     return this.pimpl.exampleGenerator(d);
   }
 
-  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null {
+  getFuzzer<T, U>(a: t.Decoder<U, T>): Fuzzer<T, U> | null {
     return this.pimpl.getFuzzer(a);
   }
 
@@ -103,14 +103,12 @@ function decoderKeys(
 class RegistryC implements Registry {
   readonly fuzzers: Map<Key, Fuzzer> = new Map();
 
-  readonly exampleGenerator: <T>(
-    d: t.Decoder<unknown, T>
-  ) => ExampleGenerator<T>;
+  readonly exampleGenerator: <T, U>(d: t.Decoder<U, T>) => ExampleGenerator<U>;
 
   constructor() {
-    this.exampleGenerator = exampleGenerator.bind(null, this) as <T>(
-      d: t.Decoder<unknown, T>
-    ) => ExampleGenerator<T>;
+    this.exampleGenerator = exampleGenerator.bind(null, this) as <T, U>(
+      d: t.Decoder<U, T>
+    ) => ExampleGenerator<U>;
   }
 
   register(...vv: Fuzzer[]) {
@@ -120,12 +118,12 @@ class RegistryC implements Registry {
     return this;
   }
 
-  getFuzzer<T>(a: t.Decoder<unknown, T>): Fuzzer<T> | null {
-    const keys = decoderKeys(a);
+  getFuzzer<T, U>(a: t.Decoder<U, T>): Fuzzer<T, U> | null {
+    const keys = decoderKeys(a as t.Decoder<unknown, T>);
     for (const c of keys) {
       const v = this.fuzzers.get(c);
       if (v) {
-        return v as Fuzzer<T>;
+        return v as Fuzzer<T, U>;
       }
     }
     return null;

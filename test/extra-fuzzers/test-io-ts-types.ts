@@ -7,14 +7,40 @@ import {
   FuzzContext,
   createCoreRegistry,
 } from '../../src/';
+import * as t from 'io-ts';
 import { isRight, Right } from 'fp-ts/lib/Either';
 import { date } from 'io-ts-types/lib/date';
+import { BooleanFromString } from 'io-ts-types/lib/BooleanFromString';
+import { DateFromISOString } from 'io-ts-types/lib/DateFromISOString';
+import { DateFromNumber } from 'io-ts-types/lib/DateFromNumber';
+import { DateFromUnixTime } from 'io-ts-types/lib/DateFromUnixTime';
+import { IntFromString } from 'io-ts-types/lib/IntFromString';
+import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
+import { NumberFromString } from 'io-ts-types/lib/NumberFromString';
+import { UUID } from 'io-ts-types/lib/UUID';
+import { either } from 'io-ts-types/lib/either';
+import { option } from 'io-ts-types/lib/option';
+import { regexp } from 'io-ts-types/lib/regexp';
 import { Encode } from 'io-ts';
 import { rngi } from '../../src/rng';
 
 const count = 100;
 
-const types = [date];
+// tslint:disable-next-line:no-any
+const types: Array<t.Type<any>> = [
+  date,
+  BooleanFromString,
+  DateFromISOString,
+  DateFromNumber,
+  DateFromUnixTime,
+  IntFromString,
+  NonEmptyString,
+  NumberFromString,
+  UUID,
+  either(t.string, t.number),
+  option(t.string),
+  regexp,
+];
 
 describe('extra-fuzzers', () => {
   describe('io-ts-types', () => {
@@ -34,9 +60,9 @@ describe('extra-fuzzers', () => {
             const d = b.decode(v);
             assert.ok(isRight(d), `must decode ${JSON.stringify(v)}`);
             assert.deepStrictEqual(
-              (d as Right<unknown>).right,
+              b.encode((d as Right<unknown>).right),
               v,
-              `must decode ${JSON.stringify(v)}`
+              `must encode back to ${JSON.stringify(v)}`
             );
             old.push(v);
           }

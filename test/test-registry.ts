@@ -6,7 +6,7 @@ import { Fuzzer, fuzzContext } from '../src';
 import * as t from 'io-ts';
 
 describe('registry', () => {
-  const fuzzStr1: Fuzzer<string, t.StringType> = {
+  const fuzzStr1: Fuzzer<string, unknown, t.StringType> = {
     id: 'StringType',
     idType: 'tag',
     impl: {
@@ -16,7 +16,7 @@ describe('registry', () => {
       },
     },
   };
-  const fuzzNum: Fuzzer<number, t.NumberType> = {
+  const fuzzNum: Fuzzer<number, unknown, t.NumberType> = {
     id: 'NumberType',
     idType: 'tag',
     impl: {
@@ -26,7 +26,7 @@ describe('registry', () => {
       },
     },
   };
-  const fuzzStr2: Fuzzer<string, t.StringType> = {
+  const fuzzStr2: Fuzzer<string, unknown, t.StringType> = {
     id: 'StringType',
     idType: 'tag',
     impl: {
@@ -190,7 +190,10 @@ describe('registry', () => {
               .withUnknownFuzzer(t.string)
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
-              const e = r.encode([i, fuzzContext({ maxRecursionHint: 10 })]);
+              const e = r.encode([
+                i,
+                fuzzContext({ maxRecursionHint: 10 }),
+              ]) as unknown[];
               e.forEach(x => assert.deepStrictEqual(typeof x, 'string'));
             }
           });
@@ -208,7 +211,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length <= 3
               );
             }
           });
@@ -223,7 +229,10 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length,
                 ml
               );
             }
@@ -237,7 +246,10 @@ describe('registry', () => {
             const r = r0.exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length <= 3
               );
             }
           });
@@ -255,7 +267,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length <= 3
               );
             }
           });
@@ -270,7 +285,10 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length,
                 ml
               );
             }
@@ -287,7 +305,10 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length,
                 ml
               );
             }
@@ -307,7 +328,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length <= 3
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length <= 3
               );
             }
           });
@@ -322,7 +346,10 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]).length,
+                (r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as unknown[]).length,
                 ml
               );
             }
@@ -342,9 +369,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              Object.keys(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })])
-              ).map(x => keys.add(x));
+              Object.keys(r.encode([
+                i,
+                fuzzContext({ maxRecursionHint: 10 }),
+              ]) as object).map(x => keys.add(x));
             }
             assert.deepStrictEqual(keys.size, 2);
             assert.ok(keys.has('a'));
@@ -364,9 +392,10 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              const ek = Object.keys(
-                r.encode([i, fuzzContext({ maxRecursionHint: 10 })])
-              );
+              const ek = Object.keys(r.encode([
+                i,
+                fuzzContext({ maxRecursionHint: 10 }),
+              ]) as object);
               assert.ok(ek.includes('a'));
               assert.ok(ek.includes('j'));
               ek.map(x => keys.add(x));
