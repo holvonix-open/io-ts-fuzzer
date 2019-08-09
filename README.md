@@ -66,7 +66,7 @@ Currently supports (along with their closure under composition):
 - `t.void`
 
 If you `yarn add monocle-ts io-ts-types` and register the
-[`io-ts-types`](https://github.com/gcanti/io-ts) extra fuzzers via
+[`io-ts-types`](https://github.com/gcanti/io-ts-types) extra fuzzers via
 `r.register(...await loadIoTsTypesFuzzers())`, the following additional types
 will be supported:
 
