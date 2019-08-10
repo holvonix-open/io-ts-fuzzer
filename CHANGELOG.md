@@ -1,3 +1,15 @@
+## [4.0.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.0.0...v4.0.1) (2019-08-10)
+
+
+### 💄 Polish
+
+* prettify docs ([8018a80](https://github.com/holvonix-open/io-ts-fuzzer/commit/8018a80))
+
+
+### 📖 Documentation
+
+* document use of [@experimental](https://github.com/experimental) ([3a925cc](https://github.com/holvonix-open/io-ts-fuzzer/commit/3a925cc))
+
 # [4.0.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v3.0.5...v4.0.0) (2019-08-09)
 
 
