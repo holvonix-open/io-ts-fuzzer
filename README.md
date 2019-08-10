@@ -8,6 +8,7 @@
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=holvonix-open/io-ts-fuzzer)](https://dependabot.com)
 [![DeepScan grade](https://deepscan.io/api/teams/4465/projects/6653/branches/56883/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=4465&pid=6653&bid=56883)
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/io-ts-fuzzer.svg)](https://bundlephobia.com/result?p=io-ts-fuzzer)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 `io-ts-fuzzer` lets you generate examples of a given
