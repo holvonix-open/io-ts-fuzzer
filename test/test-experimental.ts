@@ -75,4 +75,4 @@ describe('experimental', () => {
       });
     }
   });
-}).timeout(1000000);
+});
