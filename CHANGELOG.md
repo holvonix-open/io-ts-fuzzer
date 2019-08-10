@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.1...v4.1.2) (2019-08-10)
+
+
+### 📖 Documentation
+
+* clarify license ([62d47c5](https://github.com/holvonix-open/io-ts-fuzzer/commit/62d47c5))
+
 ## [4.1.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.0...v4.1.1) (2019-08-10)
 
 
