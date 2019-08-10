@@ -1,3 +1,15 @@
+## [4.1.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.2...v4.1.3) (2019-08-10)
+
+
+### 📖 Documentation
+
+* include min size badge [skip-release] ([54b04c6](https://github.com/holvonix-open/io-ts-fuzzer/commit/54b04c6))
+
+
+### 🧦 Miscellaneous
+
+* **deps-dev:** bump @holvonix-open/release-config-js ([#20](https://github.com/holvonix-open/io-ts-fuzzer/issues/20)) ([75e16cd](https://github.com/holvonix-open/io-ts-fuzzer/commit/75e16cd))
+
 ## [4.1.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.1...v4.1.2) (2019-08-10)
 
 
