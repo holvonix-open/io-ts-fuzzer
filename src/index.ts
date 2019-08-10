@@ -26,4 +26,5 @@ export * from './fuzzer';
 export * from './extras';
 
 import * as core from './core';
-export { core };
+import * as experimental from './experimental';
+export { core, experimental };
