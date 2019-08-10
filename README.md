@@ -13,6 +13,8 @@
 `io-ts-fuzzer` lets you generate examples of a given
 [`io-ts`](https://github.com/gcanti/io-ts) type.
 
+Please note: API elements marked `@experimental` may be changed in breaking ways (including removal) *without* a major version release.  Don't use such APIs if that's not acceptable for you.
+
 ## Quick Start
 
 After `yarn add fp-ts io-ts io-ts-fuzzer`...
