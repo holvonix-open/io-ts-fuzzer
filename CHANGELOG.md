@@ -1,3 +1,16 @@
+# [4.1.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.0.1...v4.1.0) (2019-08-10)
+
+
+### 🌟🚀 Features
+
+* experimental fuzzer for nonempty arrays ([#19](https://github.com/holvonix-open/io-ts-fuzzer/issues/19)) ([7e01e15](https://github.com/holvonix-open/io-ts-fuzzer/commit/7e01e15))
+* export rng ([af1910f](https://github.com/holvonix-open/io-ts-fuzzer/commit/af1910f))
+
+
+### 🐛 Bug Fixes
+
+* randomize NonEmptyArray elements independently ([818a366](https://github.com/holvonix-open/io-ts-fuzzer/commit/818a366))
+
 ## [4.0.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.0.0...v4.0.1) (2019-08-10)
 
 
