@@ -1,3 +1,15 @@
+## [4.1.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.0...v4.1.1) (2019-08-10)
+
+
+### 🐛 Bug Fixes
+
+* need seedrandom types as prod dep ([27c1860](https://github.com/holvonix-open/io-ts-fuzzer/commit/27c1860))
+
+
+### 🔬 Tests
+
+* remove spurious debugging timeout ([8338f6e](https://github.com/holvonix-open/io-ts-fuzzer/commit/8338f6e))
+
 # [4.1.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.0.1...v4.1.0) (2019-08-10)
 
 
