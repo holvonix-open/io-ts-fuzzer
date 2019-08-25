@@ -111,6 +111,7 @@ currently:
 - maximum array length (`array`, `readonlyArray`, `UnknownArray`)
 - extra properties inserted into `partial` and `type` (interface) objects
 - type used to fuzz `unknown` types
+- maximum record count (`record`, `UnknownRecord`)
 
 ### Fuzz Recursive Types
 

@@ -256,6 +256,118 @@ describe('registry', () => {
         });
       });
 
+      describe('#withRecordFuzzer', () => {
+        describe('on the core registry', () => {
+          it(`overrides the record fuzzer max count`, () => {
+            const b = t.record(t.string, t.number);
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withRecordFuzzer(3)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length <= 3
+              );
+            }
+          });
+
+          it(`does not affect unknown records`, () => {
+            const b = t.UnknownRecord;
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withRecordFuzzer(3)
+              .exampleGenerator(b);
+            let ml = 0;
+            for (let i = 0; i < 100; i++) {
+              ml = Math.max(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length,
+                ml
+              );
+            }
+            assert.ok(ml > 3);
+          });
+
+          it(`overrides apply to the underlying registry`, () => {
+            const b = t.record(t.string, t.number);
+            const r0 = lib.createCoreRegistry();
+            lib.fluent(r0).withRecordFuzzer(3);
+            const r = r0.exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length <= 3
+              );
+            }
+          });
+        });
+      });
+
+      describe('#withUnknownRecordFuzzer', () => {
+        describe('on the core registry', () => {
+          it(`overrides the unknown record fuzzer max count`, () => {
+            const b = t.UnknownRecord;
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withUnknownRecordFuzzer(3)
+              .exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length <= 3
+              );
+            }
+          });
+
+          it(`does not affect records`, () => {
+            const b = t.record(t.string, t.unknown);
+            const r0 = lib.createCoreRegistry();
+            const r = lib
+              .fluent(r0)
+              .withUnknownRecordFuzzer(3)
+              .exampleGenerator(b);
+            let ml = 0;
+            for (let i = 0; i < 100; i++) {
+              ml = Math.max(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length,
+                ml
+              );
+            }
+            assert.ok(ml > 3);
+          });
+
+          it(`overrides apply to the underlying registry`, () => {
+            const b = t.UnknownRecord;
+            const r0 = lib.createCoreRegistry();
+            lib.fluent(r0).withUnknownRecordFuzzer(3);
+            const r = r0.exampleGenerator(b);
+            for (let i = 0; i < 100; i++) {
+              assert.ok(
+                Object.getOwnPropertyNames(r.encode([
+                  i,
+                  fuzzContext({ maxRecursionHint: 10 }),
+                ]) as object).length <= 3
+              );
+            }
+          });
+        });
+      });
+
       describe('#withAnyArrayFuzzer', () => {
         describe('on the core registry', () => {
           it(`overrides the any array fuzzer max length`, () => {

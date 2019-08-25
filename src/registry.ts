@@ -8,6 +8,8 @@ import {
   unknownFuzzer,
   arrayFuzzer,
   coreFuzzers,
+  recordFuzzer,
+  unknownRecordFuzzer,
 } from './core';
 
 export interface Registry {
@@ -23,6 +25,8 @@ export interface FluentRegistry extends Registry {
   withUnknownFuzzer(codec?: t.Decoder<unknown, unknown>): FluentRegistry;
   withArrayFuzzer(maxLength?: number): FluentRegistry;
   withAnyArrayFuzzer(maxLength?: number): FluentRegistry;
+  withRecordFuzzer(maxCount?: number): FluentRegistry;
+  withUnknownRecordFuzzer(maxCount?: number): FluentRegistry;
   withReadonlyArrayFuzzer(maxLength?: number): FluentRegistry;
   withPartialFuzzer(extra?: t.Props): FluentRegistry;
   withInterfaceFuzzer(extra?: t.Props): FluentRegistry;
@@ -60,6 +64,16 @@ class FluentifiedRegistry implements FluentRegistry {
 
   withAnyArrayFuzzer(maxLength?: number): FluentRegistry {
     this.register(anyArrayFuzzer(maxLength));
+    return this;
+  }
+
+  withRecordFuzzer(maxCount?: number): FluentRegistry {
+    this.register(recordFuzzer(maxCount));
+    return this;
+  }
+
+  withUnknownRecordFuzzer(maxCount?: number): FluentRegistry {
+    this.register(unknownRecordFuzzer(maxCount));
     return this;
   }
 
