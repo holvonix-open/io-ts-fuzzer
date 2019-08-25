@@ -31,9 +31,9 @@ type BasicType =
   | t.UnknownType
   | t.VoidType
   | t.RecursiveType<t.Mixed>
-  // not yet supported:
   | t.AnyDictionaryType
   | t.DictionaryType<t.Mixed, t.Mixed>
+  // not yet supported:
   | t.RefinementType<t.Mixed>;
 
 type basicFuzzGenerator<
