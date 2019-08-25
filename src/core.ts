@@ -237,7 +237,7 @@ function recordFuzzFunc<K, V>(maxCount: number) {
       const kt = typeof k;
       if (kt !== 'string') {
         throw new Error(
-          'IOTSF0004: recordFuzzer cannot support non-(string, number, boolean) key types'
+          'IOTSF0004: recordFuzzer cannot support non-string key types'
         );
       }
       const v = hv.encode([r.int32(), ctx]) as V;
