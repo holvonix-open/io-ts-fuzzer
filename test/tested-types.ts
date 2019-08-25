@@ -95,6 +95,23 @@ const RecD2_MutualRecursionArray: t.Type<
     next: t.union([t.undefined, RecD1_MutualRecursionReadonlyArray]),
   })
 );
+
+// tslint:disable-next-line:class-name
+interface RecE2_RecordOfRecursion {
+  rr: Record<'a' | 'b' | 'c' | 'd' | 'e', RecE2_RecordOfRecursion>;
+}
+// tslint:disable-next-line:variable-name
+const RecE2_RecordOfRecursion: t.Type<RecE2_RecordOfRecursion> = t.recursion(
+  'RecE2_RecordOfRecursion',
+  () =>
+    t.type({
+      rr: t.record(
+        t.keyof({ a: null, b: null, c: null, d: null, e: null }),
+        RecE2_RecordOfRecursion
+      ),
+    })
+);
+
 // tslint:disable-next-line:no-any
 export const types: Array<t.Type<any>> = [
   // Recursive types
@@ -106,6 +123,7 @@ export const types: Array<t.Type<any>> = [
   RecE1_ArrayOfRecursion,
   RecD1_MutualRecursionReadonlyArray,
   RecD2_MutualRecursionArray,
+  RecE2_RecordOfRecursion,
   // Simple 0- or 1-depth types
   t.number,
   t.string,
@@ -146,7 +164,28 @@ export const types: Array<t.Type<any>> = [
   t.readonly(t.tuple([t.string, t.boolean])),
   t.readonly(t.type({ s: t.string, j: t.boolean })),
 
+  t.UnknownRecord,
+  t.record(t.string, t.number),
+  t.record(t.keyof({ 3: null, b: null, true: null }), t.number),
   // Complex nested types
+  t.record(
+    t.string,
+    t.union([
+      t.readonly(
+        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+      ),
+      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
+    ])
+  ),
+  t.record(
+    t.string,
+    t.union([
+      t.readonly(
+        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
+      ),
+      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
+    ])
+  ),
   t.exact(
     t.intersection([
       t.type({ s: t.string, m: t.number, ___0000_extra_: t.boolean }),
@@ -254,33 +293,12 @@ export const unknownTypes: Array<t.Decoder<unknown, unknown>> = [
   weirdString,
   t.union([t.string, weirdString]),
   customStringDecoder,
-
-  // TODO - implement these:
-  t.UnknownRecord,
-  t.record(t.string, t.number),
-  t.record(t.number, t.number),
-  t.record(t.boolean, t.number),
-  t.record(
-    t.string,
-    t.union([
-      t.readonly(
-        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
-      ),
-      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
-    ])
-  ),
-  t.record(
-    t.string,
-    t.union([
-      t.readonly(
-        t.partial({ s: t.string, m: t.number, ___0000_extra_: t.boolean })
-      ),
-      t.readonly(t.partial({ s2: t.string, j: t.boolean })),
-    ])
-  ),
 ];
 
 export const runtimeFailTypes = [
+  t.record(t.number, t.number),
+  t.record(t.type({ m: t.number }), t.number),
+  t.record(t.boolean, t.number),
   t.intersection([t.string, t.type({ m: t.number })]),
   t.intersection([t.type({ m: t.number }), t.string]),
 ];
