@@ -219,6 +219,64 @@ export function fuzzRecursive(
   };
 }
 
+function recordFuzzFunc<K, V>(maxCount: number) {
+  return (
+    ctx: FuzzContext,
+    n: number,
+    hk: FuzzerUnit<unknown>,
+    hv: FuzzerUnit<unknown>
+  ) => {
+    const ret = Object.create(null);
+    const r = rng(n);
+    if (!ctx.mayRecurse() && (hk.mightRecurse || hv.mightRecurse)) {
+      return ret;
+    }
+    const ml = Math.abs(r.int32()) % maxCount;
+    for (let index = 0; index < ml; index++) {
+      const k = hk.encode([r.int32(), ctx]) as K;
+      const kt = typeof k;
+      if (kt !== 'string') {
+        throw new Error(
+          'IOTSF0004: recordFuzzer cannot support non-(string, number, boolean) key types'
+        );
+      }
+      const v = hv.encode([r.int32(), ctx]) as V;
+      ret[k] = v;
+    }
+    return ret;
+  };
+}
+
+export const defaultMaxRecordCount = 5;
+
+const fuzzUnknownRecordWithMaxCount = (maxCount: number) => (
+  b: t.AnyDictionaryType
+): ConcreteFuzzer<unknown, unknown> => {
+  return {
+    mightRecurse: false,
+    children: [t.string, t.unknown],
+    func: recordFuzzFunc<string, unknown>(maxCount),
+  };
+};
+
+export function unknownRecordFuzzer(maxCount: number = defaultMaxRecordCount) {
+  return gen(fuzzUnknownRecordWithMaxCount(maxCount), 'AnyDictionaryType');
+}
+
+const fuzzRecordWithMaxCount = (maxCount: number) => (
+  b: t.DictionaryType<t.Any, t.Any>
+): ConcreteFuzzer<unknown, unknown> => {
+  return {
+    mightRecurse: false,
+    children: [b.domain, b.codomain],
+    func: recordFuzzFunc<unknown, unknown>(maxCount),
+  };
+};
+
+export function recordFuzzer(maxCount: number = defaultMaxRecordCount) {
+  return gen(fuzzRecordWithMaxCount(maxCount), 'DictionaryType');
+}
+
 function arrayFuzzFunc(maxLength: number) {
   return (ctx: FuzzContext, n: number, h0: FuzzerUnit<unknown>) => {
     const ret: unknown[] = [];
@@ -412,6 +470,8 @@ export const coreFuzzers: ReadonlyArray<Fuzzer<unknown, unknown, any>> = [
   partialFuzzer(),
   arrayFuzzer(),
   anyArrayFuzzer(),
+  recordFuzzer(),
+  unknownRecordFuzzer(),
   gen(fuzzExact, 'ExactType'),
   gen(fuzzReadonly, 'ReadonlyType'),
   readonlyArrayFuzzer(),

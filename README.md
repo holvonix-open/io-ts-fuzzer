@@ -60,6 +60,7 @@ Currently supports (along with their closure under composition):
 - `t.partial`
 - `t.readonly`
 - `t.readonlyArray`
+- `t.record`
 - `t.recursive`
 - `t.string`
 - `t.tuple`
@@ -68,6 +69,7 @@ Currently supports (along with their closure under composition):
 - `t.union`
 - `t.unknown`
 - `t.UnknownArray`
+- `t.UnknownRecord`
 - `t.void`
 
 If you `yarn add monocle-ts io-ts-types` and register the
