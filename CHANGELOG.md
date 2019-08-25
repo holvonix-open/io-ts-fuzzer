@@ -1,3 +1,26 @@
+# [4.2.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.3...v4.2.0) (2019-08-25)
+
+
+### 🌟🚀 Features
+
+* support `t.record` and `t.UnknownRecord`, closes [#27](https://github.com/holvonix-open/io-ts-fuzzer/issues/27) ([#28](https://github.com/holvonix-open/io-ts-fuzzer/issues/28)) ([b60591f](https://github.com/holvonix-open/io-ts-fuzzer/commit/b60591f))
+
+
+### 📖 Documentation
+
+* delete legacy bug template ([d03195a](https://github.com/holvonix-open/io-ts-fuzzer/commit/d03195a))
+
+
+### 🧦 Miscellaneous
+
+* **deps-dev:** bump @holvonix-open/release-config-js ([#21](https://github.com/holvonix-open/io-ts-fuzzer/issues/21)) ([ceaab1b](https://github.com/holvonix-open/io-ts-fuzzer/commit/ceaab1b))
+* **deps-dev:** bump @holvonix-open/release-config-js ([#22](https://github.com/holvonix-open/io-ts-fuzzer/issues/22)) ([2fc34c6](https://github.com/holvonix-open/io-ts-fuzzer/commit/2fc34c6))
+* stale issues ([40c0d46](https://github.com/holvonix-open/io-ts-fuzzer/commit/40c0d46))
+* **deps-dev:** bump @holvonix-open/release-config-js ([#23](https://github.com/holvonix-open/io-ts-fuzzer/issues/23)) ([dc4ac16](https://github.com/holvonix-open/io-ts-fuzzer/commit/dc4ac16))
+* **deps-dev:** bump @types/node from 12.7.1 to 12.7.2 ([#24](https://github.com/holvonix-open/io-ts-fuzzer/issues/24)) ([edf12b5](https://github.com/holvonix-open/io-ts-fuzzer/commit/edf12b5))
+* **deps-dev:** bump concurrently from 4.1.1 to 4.1.2 ([#25](https://github.com/holvonix-open/io-ts-fuzzer/issues/25)) ([f54d59e](https://github.com/holvonix-open/io-ts-fuzzer/commit/f54d59e))
+* **deps-dev:** bump husky from 3.0.3 to 3.0.4 ([#26](https://github.com/holvonix-open/io-ts-fuzzer/issues/26)) ([9c60283](https://github.com/holvonix-open/io-ts-fuzzer/commit/9c60283))
+
 ## [4.1.3](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.2...v4.1.3) (2019-08-10)
 
 
