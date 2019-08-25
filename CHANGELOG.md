@@ -1,3 +1,15 @@
+## [4.2.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.2.0...v4.2.1) (2019-08-25)
+
+
+### 🐛 Bug Fixes
+
+* correct IOTSF0004 error message ([e69009d](https://github.com/holvonix-open/io-ts-fuzzer/commit/e69009d))
+
+
+### 💄 Polish
+
+* label record and unknownrecord as supported ([9251714](https://github.com/holvonix-open/io-ts-fuzzer/commit/9251714))
+
 # [4.2.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.1.3...v4.2.0) (2019-08-25)
 
 
