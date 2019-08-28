@@ -1,3 +1,15 @@
+## [4.3.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.3.0...v4.3.1) (2019-08-28)
+
+
+### 🐛 Bug Fixes
+
+* **deps-dev:** bump typescript from 3.5.3 to 3.6.2 ([#30](https://github.com/holvonix-open/io-ts-fuzzer/issues/30)) ([dfe4b31](https://github.com/holvonix-open/io-ts-fuzzer/commit/dfe4b31))
+
+
+### 🧦 Miscellaneous
+
+* **deps-dev:** bump @holvonix-open/release-config-js ([#29](https://github.com/holvonix-open/io-ts-fuzzer/issues/29)) ([f57c47f](https://github.com/holvonix-open/io-ts-fuzzer/commit/f57c47f))
+
 # [4.3.0](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.2.1...v4.3.0) (2019-08-25)
 
 
