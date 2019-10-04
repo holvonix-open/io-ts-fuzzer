@@ -38,7 +38,7 @@
     "watch:test-impl": "yarn run --silent test-impl-lcov --grep='#e2e|#int' --invert -R min",
     "w": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test\"",
     "wc": "yarn run clean && yarn run build && concurrently --raw -n tsc,mocha \"yarn run --silent watch:build\" \"yarn run --silent watch:test-cov\"",
-    "prepare": "yarn clean && yarn run check && yarn run build",
+    "prepare": "npm run snyk-protect && yarn clean && yarn run check && yarn run build",
     "build:core": "tsc -p .",
     "build": "yarn build:core",
     "clean.builds": "gts clean",
@@ -63,7 +63,8 @@
     "test-int": "yarn test --grep='#int'",
     "up": "yarn upgrade-interactive --latest",
     "yarn": "rm -rf yarn.lock node_modules/ && yarn",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "snyk-protect": "snyk protect"
   },
   "prettierGlob": {
     "include": "**/*.yml **/*.yaml **/*.md **/*.json *.js !CHANGELOG.md"
@@ -107,7 +108,8 @@
   },
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
-    "seedrandom": "^3.0.1"
+    "seedrandom": "^3.0.1",
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "@holvonix-open/release-config-js": "^1.0.3",
@@ -134,5 +136,6 @@
     "io-ts": "^2.0.1",
     "io-ts-types": "^0.5.0",
     "monocle-ts": "^2.0.0"
-  }
+  },
+  "snyk": true
 }
