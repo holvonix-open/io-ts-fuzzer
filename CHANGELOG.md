@@ -1,3 +1,17 @@
+## [4.3.2](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.3.1...v4.3.2) (2019-11-12)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** typescript 3.7.2 and others: @holvonix-open/release-config-js@1.0.12, @types/chai@4.2.4, @types/node@12.12.7, chokidar-cli@2.1.0, codecov@3.6.1, concurrently@5.0.0, fp-ts@2.1.2, husky@3.0.9, io-ts-types@0.5.2, mocha@6.2.2 ([#81](https://github.com/holvonix-open/io-ts-fuzzer/issues/81)) ([](https://github.com/holvonix-open/io-ts-fuzzer/commit/c603a80))
+
+
+### 🧦 Miscellaneous
+
+* **deps:** bump seedrandom from 3.0.3 to 3.0.5 ([#39](https://github.com/holvonix-open/io-ts-fuzzer/issues/39)) ([](https://github.com/holvonix-open/io-ts-fuzzer/commit/c60daaa))
+* **deps-dev:** bump @holvonix-open/release-config-js ([#48](https://github.com/holvonix-open/io-ts-fuzzer/issues/48)) ([](https://github.com/holvonix-open/io-ts-fuzzer/commit/bb625a0))
+* **deps-dev:** bump @holvonix-open/release-config-js ([#80](https://github.com/holvonix-open/io-ts-fuzzer/issues/80)) ([](https://github.com/holvonix-open/io-ts-fuzzer/commit/b0195ba))
+
 ## [4.3.1](https://github.com/holvonix-open/io-ts-fuzzer/compare/v4.3.0...v4.3.1) (2019-08-28)
 
 
