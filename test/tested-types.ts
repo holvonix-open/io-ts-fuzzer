@@ -78,22 +78,22 @@ interface RecD2_MutualRecursionArray {
   next: undefined | RecD1_MutualRecursionReadonlyArray;
 }
 // tslint:disable-next-line:variable-name
-const RecD1_MutualRecursionReadonlyArray: t.Type<
-  RecD1_MutualRecursionReadonlyArray
-> = t.recursion('RecD1_MutualRecursionReadonlyArray', () =>
-  t.type({
-    c1: t.union([t.number, RecD1_MutualRecursionReadonlyArray]),
-    next: t.readonlyArray(RecD2_MutualRecursionArray),
-  })
+const RecD1_MutualRecursionReadonlyArray: t.Type<RecD1_MutualRecursionReadonlyArray> = t.recursion(
+  'RecD1_MutualRecursionReadonlyArray',
+  () =>
+    t.type({
+      c1: t.union([t.number, RecD1_MutualRecursionReadonlyArray]),
+      next: t.readonlyArray(RecD2_MutualRecursionArray),
+    })
 );
 // tslint:disable-next-line:variable-name
-const RecD2_MutualRecursionArray: t.Type<
-  RecD2_MutualRecursionArray
-> = t.recursion('RecD2_MutualRecursionArray', () =>
-  t.type({
-    c2: t.union([t.string, RecD2_MutualRecursionArray]),
-    next: t.union([t.undefined, RecD1_MutualRecursionReadonlyArray]),
-  })
+const RecD2_MutualRecursionArray: t.Type<RecD2_MutualRecursionArray> = t.recursion(
+  'RecD2_MutualRecursionArray',
+  () =>
+    t.type({
+      c2: t.union([t.string, RecD2_MutualRecursionArray]),
+      next: t.union([t.undefined, RecD1_MutualRecursionReadonlyArray]),
+    })
 );
 
 // tslint:disable-next-line:class-name
