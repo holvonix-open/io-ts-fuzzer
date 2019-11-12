@@ -267,10 +267,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length <= 3
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length <= 3
               );
             }
           });
@@ -285,10 +284,9 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length,
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length,
                 ml
               );
             }
@@ -302,10 +300,9 @@ describe('registry', () => {
             const r = r0.exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length <= 3
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length <= 3
               );
             }
           });
@@ -323,10 +320,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length <= 3
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length <= 3
               );
             }
           });
@@ -341,10 +337,9 @@ describe('registry', () => {
             let ml = 0;
             for (let i = 0; i < 100; i++) {
               ml = Math.max(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length,
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length,
                 ml
               );
             }
@@ -358,10 +353,9 @@ describe('registry', () => {
             const r = r0.exampleGenerator(b);
             for (let i = 0; i < 100; i++) {
               assert.ok(
-                Object.getOwnPropertyNames(r.encode([
-                  i,
-                  fuzzContext({ maxRecursionHint: 10 }),
-                ]) as object).length <= 3
+                Object.getOwnPropertyNames(
+                  r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+                ).length <= 3
               );
             }
           });
@@ -481,10 +475,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              Object.keys(r.encode([
-                i,
-                fuzzContext({ maxRecursionHint: 10 }),
-              ]) as object).map(x => keys.add(x));
+              Object.keys(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+              ).map(x => keys.add(x));
             }
             assert.deepStrictEqual(keys.size, 2);
             assert.ok(keys.has('a'));
@@ -504,10 +497,9 @@ describe('registry', () => {
               .exampleGenerator(b);
             const keys = new Set<string>();
             for (let i = 0; i < 10; i++) {
-              const ek = Object.keys(r.encode([
-                i,
-                fuzzContext({ maxRecursionHint: 10 }),
-              ]) as object);
+              const ek = Object.keys(
+                r.encode([i, fuzzContext({ maxRecursionHint: 10 })]) as object
+              );
               assert.ok(ek.includes('a'));
               assert.ok(ek.includes('j'));
               ek.map(x => keys.add(x));

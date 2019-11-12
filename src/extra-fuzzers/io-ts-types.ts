@@ -81,7 +81,10 @@ export const fuzzers = [
     'DateFromUnixTime'
   ),
   fuzzerByName(pipeFuzzer(t.Int, IntFromString.encode), 'IntFromString'),
-  fuzzerByName(pipeFuzzer(t.string, x => `n${x}`), 'NonEmptyString'),
+  fuzzerByName(
+    pipeFuzzer(t.string, x => `n${x}`),
+    'NonEmptyString'
+  ),
   fuzzerByName(
     pipeFuzzer(t.number, NumberFromString.encode),
     'NumberFromString'

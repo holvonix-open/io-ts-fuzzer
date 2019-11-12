@@ -431,7 +431,7 @@ export function fuzzIntersection(
     children: b.types,
     func: (ctx, n, ...h) => {
       let d = 0;
-      let ret: unknown = undefined;
+      let ret: object | undefined | null = undefined;
       const r = rng(n);
       do {
         ret = undefined;
