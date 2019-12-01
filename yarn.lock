@@ -97,9 +97,9 @@
     to-fast-properties "^2.0.0"
 
 "@holvonix-open/release-config-js@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@holvonix-open/release-config-js/-/release-config-js-1.0.12.tgz#5a669ee9305e983d460cb1f903c7bfc30b592442"
-  integrity sha512-bbZsZmbdoMQCcGYgBihkOkYIjPpBq6Xn9YA23TL6K4VRrGmIGN44WdtImNXLXW01CmOix3hPOMrseGkXcajwxg==
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@holvonix-open/release-config-js/-/release-config-js-1.0.13.tgz#9caac84aad3b7648ab0c762abf33e2d062a341ba"
+  integrity sha512-WbCDLzEbHwzbtjrjKo0lKW6aaWyaUbLDUn9/BOVHiPQDuUbStVYPb8LyFAg80BVGq81C1JC8Y0E9qqz6HJjr6g==
   dependencies:
     "@semantic-release/changelog" "^3.0.4"
     "@semantic-release/git" "^7.0.16"
