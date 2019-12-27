@@ -2440,9 +2440,9 @@ invert-kv@^2.0.0:
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
 io-ts-types@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/io-ts-types/-/io-ts-types-0.5.2.tgz#ff884926678a0418d36eb85045b0cf014698e554"
-  integrity sha512-ebIXH/Pf7IC/M4qa5wnQecJCs6MXZMZWaiZNWNzEP7tw+Hl8wapAI/tzBXn1LSGrpkVe0NIsFeL7yy6Byi3h+g==
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/io-ts-types/-/io-ts-types-0.5.3.tgz#c9421e051cc380fb73f8a5d099ba85655aa98728"
+  integrity sha512-n49taXKrh60QTmbfPEQGuuHAawansXCrcqGDv+KmZkj0Xnf4ulR1jlSNXmHPVqJ74owLO4u1XMv1EVBmAFPSYw==
 
 io-ts@^2.0.1:
   version "2.0.2"
