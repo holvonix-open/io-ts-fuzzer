@@ -3545,9 +3545,9 @@ modify-values@^1.0.0:
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
 monocle-ts@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/monocle-ts/-/monocle-ts-2.0.0.tgz#f695dbfb5b017846d95f0c377bd4c8acb10f7e02"
-  integrity sha512-vPM02WypUz0Xo2MtLUPgvdelCRn70VT05pdAB7qmHJSNY4CAoQt3ClpH77AG3yZk7PY8CA6++ezHcENUDOiuEA==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/monocle-ts/-/monocle-ts-2.0.1.tgz#743b7a021144e2501e8162c66a2525b9f226d6b1"
+  integrity sha512-e1ulohxv2LXuaU1hyziPWmNQRcEL2kRawU60+SVzHjb7i3AKs65KWKLHcXreONJah6I0kibeAnQaCTJ29txWXA==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
