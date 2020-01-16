@@ -2490,9 +2490,9 @@ io-ts-types@^0.5.2:
   integrity sha512-n49taXKrh60QTmbfPEQGuuHAawansXCrcqGDv+KmZkj0Xnf4ulR1jlSNXmHPVqJ74owLO4u1XMv1EVBmAFPSYw==
 
 io-ts@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.0.2.tgz#86522c945c60c6f883c5f134fcfbb7f136a8bf10"
-  integrity sha512-ydQnGMAlUJ1n+UZkBWDClm/v5OqPbe7RI8U3AgPJ3FqYQtDyu5PvJ3CUbB5ES9OFbR92NIu1rTl6R3eEOeET/A==
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.0.5.tgz#e6e3db9df8b047f9cbd6b69e7d2ad3e6437a0b13"
+  integrity sha512-pL7uUptryanI5Glv+GUv7xh+aLBjxGEDmLwmEYNSx0yOD3djK0Nw5Bt0N6BAkv9LadOUU7QKpRsLcqnTh3UlLA==
 
 ip-regex@^2.1.0:
   version "2.1.0"
