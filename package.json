@@ -116,7 +116,7 @@
     "@types/node": "^12.12.7",
     "chai": "^4.2.0",
     "chokidar-cli": "^2.1.0",
-    "codecov": "^3.6.1",
+    "codecov": "^3.6.5",
     "concurrently": "^5.0.0",
     "fp-ts": "^2.1.2",
     "gts": "^1.1.0",
