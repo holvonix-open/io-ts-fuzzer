@@ -112,7 +112,7 @@
   "devDependencies": {
     "@holvonix-open/release-config-js": "^1.0.12",
     "@types/chai": "^4.2.4",
-    "@types/mocha": "^5.2.5",
+    "@types/mocha": "^8.0.2",
     "@types/node": "^12.12.7",
     "chai": "^4.2.0",
     "chokidar-cli": "^2.1.0",
