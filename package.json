@@ -113,7 +113,7 @@
     "@holvonix-open/release-config-js": "^1.0.12",
     "@types/chai": "^4.2.4",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^12.12.7",
+    "@types/node": "^14.11.1",
     "chai": "^4.2.0",
     "chokidar-cli": "^2.1.0",
     "codecov": "^3.6.1",
