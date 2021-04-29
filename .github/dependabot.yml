@@ -1,0 +1,61 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "09:00"
+  open-pull-requests-limit: 10
+  reviewers:
+  - holvonixAdvay
+  assignees:
+  - holvonixAdvay
+  labels:
+  - dependencies
+  ignore:
+  - dependency-name: "@types/node"
+    versions:
+    - ">= 13.a, < 14"
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.22
+    - 14.14.23
+    - 14.14.24
+    - 14.14.25
+    - 14.14.26
+    - 14.14.27
+    - 14.14.28
+    - 14.14.29
+    - 14.14.30
+    - 14.14.31
+    - 14.14.32
+    - 14.14.33
+    - 14.14.34
+    - 14.14.35
+    - 14.14.36
+    - 14.14.37
+    - 14.14.39
+    - 14.14.41
+    - 15.0.0
+  - dependency-name: fp-ts
+    versions:
+    - 2.10.0
+    - 2.10.1
+    - 2.10.4
+    - 2.9.3
+    - 2.9.4
+    - 2.9.5
+  - dependency-name: npm
+    versions:
+    - 6.14.11
+    - 6.14.12
+  - dependency-name: lodash
+    versions:
+    - 4.17.20
+  - dependency-name: handlebars
+    versions:
+    - 4.7.6
+  commit-message:
+    prefix: chore
+    prefix-development: chore
+    include: scope
